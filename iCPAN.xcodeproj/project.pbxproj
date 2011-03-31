@@ -1,0 +1,508 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		EDF7CE24134438880012E9DA /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EDF7CE23134438880012E9DA /* UIKit.framework */; };
+		EDF7CE26134438880012E9DA /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EDF7CE25134438880012E9DA /* Foundation.framework */; };
+		EDF7CE28134438880012E9DA /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EDF7CE27134438880012E9DA /* CoreGraphics.framework */; };
+		EDF7CE2A134438880012E9DA /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EDF7CE29134438880012E9DA /* CoreData.framework */; };
+		EDF7CE30134438880012E9DA /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = EDF7CE2E134438880012E9DA /* InfoPlist.strings */; };
+		EDF7CE33134438880012E9DA /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = EDF7CE32134438880012E9DA /* main.m */; };
+		EDF7CE36134438880012E9DA /* iCPANAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = EDF7CE35134438880012E9DA /* iCPANAppDelegate.m */; };
+		EDF7CE39134438880012E9DA /* iCPAN.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = EDF7CE37134438880012E9DA /* iCPAN.xcdatamodeld */; };
+		EDF7CE3D134438880012E9DA /* iCPANAppDelegate_iPhone.m in Sources */ = {isa = PBXBuildFile; fileRef = EDF7CE3C134438880012E9DA /* iCPANAppDelegate_iPhone.m */; };
+		EDF7CE40134438880012E9DA /* MainWindow_iPhone.xib in Resources */ = {isa = PBXBuildFile; fileRef = EDF7CE3E134438880012E9DA /* MainWindow_iPhone.xib */; };
+		EDF7CE44134438880012E9DA /* iCPANAppDelegate_iPad.m in Sources */ = {isa = PBXBuildFile; fileRef = EDF7CE43134438880012E9DA /* iCPANAppDelegate_iPad.m */; };
+		EDF7CE47134438880012E9DA /* MainWindow_iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = EDF7CE45134438880012E9DA /* MainWindow_iPad.xib */; };
+		EDF7CE4E134438890012E9DA /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EDF7CE23134438880012E9DA /* UIKit.framework */; };
+		EDF7CE4F134438890012E9DA /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EDF7CE25134438880012E9DA /* Foundation.framework */; };
+		EDF7CE50134438890012E9DA /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EDF7CE27134438880012E9DA /* CoreGraphics.framework */; };
+		EDF7CE51134438890012E9DA /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EDF7CE29134438880012E9DA /* CoreData.framework */; };
+		EDF7CE59134438890012E9DA /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = EDF7CE57134438890012E9DA /* InfoPlist.strings */; };
+		EDF7CE5C134438890012E9DA /* iCPANTests.h in Resources */ = {isa = PBXBuildFile; fileRef = EDF7CE5B134438890012E9DA /* iCPANTests.h */; };
+		EDF7CE5E134438890012E9DA /* iCPANTests.m in Sources */ = {isa = PBXBuildFile; fileRef = EDF7CE5D134438890012E9DA /* iCPANTests.m */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		EDF7CE52134438890012E9DA /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = EDF7CE16134438880012E9DA /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = EDF7CE1E134438880012E9DA;
+			remoteInfo = iCPAN;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		EDF7CE1F134438880012E9DA /* iCPAN.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = iCPAN.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		EDF7CE23134438880012E9DA /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
+		EDF7CE25134438880012E9DA /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		EDF7CE27134438880012E9DA /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
+		EDF7CE29134438880012E9DA /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
+		EDF7CE2D134438880012E9DA /* iCPAN-Info.plist */ = {isa = PBXFileReference; path = "iCPAN-Info.plist"; sourceTree = "<group>"; };
+		EDF7CE2F134438880012E9DA /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		EDF7CE31134438880012E9DA /* iCPAN-Prefix.pch */ = {isa = PBXFileReference; path = "iCPAN-Prefix.pch"; sourceTree = "<group>"; };
+		EDF7CE32134438880012E9DA /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		EDF7CE34134438880012E9DA /* iCPANAppDelegate.h */ = {isa = PBXFileReference; path = iCPANAppDelegate.h; sourceTree = "<group>"; };
+		EDF7CE35134438880012E9DA /* iCPANAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = iCPANAppDelegate.m; sourceTree = "<group>"; };
+		EDF7CE38134438880012E9DA /* iCPAN.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = iCPAN.xcdatamodel; sourceTree = "<group>"; };
+		EDF7CE3B134438880012E9DA /* iCPANAppDelegate_iPhone.h */ = {isa = PBXFileReference; name = iCPANAppDelegate_iPhone.h; path = iPhone/iCPANAppDelegate_iPhone.h; sourceTree = "<group>"; };
+		EDF7CE3C134438880012E9DA /* iCPANAppDelegate_iPhone.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = iCPANAppDelegate_iPhone.m; path = iPhone/iCPANAppDelegate_iPhone.m; sourceTree = "<group>"; };
+		EDF7CE3F134438880012E9DA /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = iPhone/en.lproj/MainWindow_iPhone.xib; sourceTree = "<group>"; };
+		EDF7CE42134438880012E9DA /* iCPANAppDelegate_iPad.h */ = {isa = PBXFileReference; name = iCPANAppDelegate_iPad.h; path = iPad/iCPANAppDelegate_iPad.h; sourceTree = "<group>"; };
+		EDF7CE43134438880012E9DA /* iCPANAppDelegate_iPad.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = iCPANAppDelegate_iPad.m; path = iPad/iCPANAppDelegate_iPad.m; sourceTree = "<group>"; };
+		EDF7CE46134438880012E9DA /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = iPad/en.lproj/MainWindow_iPad.xib; sourceTree = "<group>"; };
+		EDF7CE4D134438890012E9DA /* iCPANTests.octest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = iCPANTests.octest; sourceTree = BUILT_PRODUCTS_DIR; };
+		EDF7CE56134438890012E9DA /* iCPANTests-Info.plist */ = {isa = PBXFileReference; path = "iCPANTests-Info.plist"; sourceTree = "<group>"; };
+		EDF7CE58134438890012E9DA /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		EDF7CE5A134438890012E9DA /* iCPANTests-Prefix.pch */ = {isa = PBXFileReference; path = "iCPANTests-Prefix.pch"; sourceTree = "<group>"; };
+		EDF7CE5B134438890012E9DA /* iCPANTests.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = iCPANTests.h; sourceTree = "<group>"; };
+		EDF7CE5D134438890012E9DA /* iCPANTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = iCPANTests.m; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		EDF7CE1C134438880012E9DA /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				EDF7CE24134438880012E9DA /* UIKit.framework in Frameworks */,
+				EDF7CE26134438880012E9DA /* Foundation.framework in Frameworks */,
+				EDF7CE28134438880012E9DA /* CoreGraphics.framework in Frameworks */,
+				EDF7CE2A134438880012E9DA /* CoreData.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		EDF7CE49134438890012E9DA /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				EDF7CE4E134438890012E9DA /* UIKit.framework in Frameworks */,
+				EDF7CE4F134438890012E9DA /* Foundation.framework in Frameworks */,
+				EDF7CE50134438890012E9DA /* CoreGraphics.framework in Frameworks */,
+				EDF7CE51134438890012E9DA /* CoreData.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		EDF7CE14134438880012E9DA = {
+			isa = PBXGroup;
+			children = (
+				EDF7CE2B134438880012E9DA /* iCPAN */,
+				EDF7CE54134438890012E9DA /* iCPANTests */,
+				EDF7CE22134438880012E9DA /* Frameworks */,
+				EDF7CE20134438880012E9DA /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		EDF7CE20134438880012E9DA /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				EDF7CE1F134438880012E9DA /* iCPAN.app */,
+				EDF7CE4D134438890012E9DA /* iCPANTests.octest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		EDF7CE22134438880012E9DA /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				EDF7CE23134438880012E9DA /* UIKit.framework */,
+				EDF7CE25134438880012E9DA /* Foundation.framework */,
+				EDF7CE27134438880012E9DA /* CoreGraphics.framework */,
+				EDF7CE29134438880012E9DA /* CoreData.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		EDF7CE2B134438880012E9DA /* iCPAN */ = {
+			isa = PBXGroup;
+			children = (
+				EDF7CE34134438880012E9DA /* iCPANAppDelegate.h */,
+				EDF7CE35134438880012E9DA /* iCPANAppDelegate.m */,
+				EDF7CE37134438880012E9DA /* iCPAN.xcdatamodeld */,
+				EDF7CE3A134438880012E9DA /* iPhone */,
+				EDF7CE41134438880012E9DA /* iPad */,
+				EDF7CE2C134438880012E9DA /* Supporting Files */,
+			);
+			path = iCPAN;
+			sourceTree = "<group>";
+		};
+		EDF7CE2C134438880012E9DA /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				EDF7CE2D134438880012E9DA /* iCPAN-Info.plist */,
+				EDF7CE2E134438880012E9DA /* InfoPlist.strings */,
+				EDF7CE31134438880012E9DA /* iCPAN-Prefix.pch */,
+				EDF7CE32134438880012E9DA /* main.m */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		EDF7CE3A134438880012E9DA /* iPhone */ = {
+			isa = PBXGroup;
+			children = (
+				EDF7CE3B134438880012E9DA /* iCPANAppDelegate_iPhone.h */,
+				EDF7CE3C134438880012E9DA /* iCPANAppDelegate_iPhone.m */,
+				EDF7CE3E134438880012E9DA /* MainWindow_iPhone.xib */,
+			);
+			name = iPhone;
+			sourceTree = "<group>";
+		};
+		EDF7CE41134438880012E9DA /* iPad */ = {
+			isa = PBXGroup;
+			children = (
+				EDF7CE42134438880012E9DA /* iCPANAppDelegate_iPad.h */,
+				EDF7CE43134438880012E9DA /* iCPANAppDelegate_iPad.m */,
+				EDF7CE45134438880012E9DA /* MainWindow_iPad.xib */,
+			);
+			name = iPad;
+			sourceTree = "<group>";
+		};
+		EDF7CE54134438890012E9DA /* iCPANTests */ = {
+			isa = PBXGroup;
+			children = (
+				EDF7CE5B134438890012E9DA /* iCPANTests.h */,
+				EDF7CE5D134438890012E9DA /* iCPANTests.m */,
+				EDF7CE55134438890012E9DA /* Supporting Files */,
+			);
+			path = iCPANTests;
+			sourceTree = "<group>";
+		};
+		EDF7CE55134438890012E9DA /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				EDF7CE56134438890012E9DA /* iCPANTests-Info.plist */,
+				EDF7CE57134438890012E9DA /* InfoPlist.strings */,
+				EDF7CE5A134438890012E9DA /* iCPANTests-Prefix.pch */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		EDF7CE1E134438880012E9DA /* iCPAN */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = EDF7CE61134438890012E9DA /* Build configuration list for PBXNativeTarget "iCPAN" */;
+			buildPhases = (
+				EDF7CE1B134438880012E9DA /* Sources */,
+				EDF7CE1C134438880012E9DA /* Frameworks */,
+				EDF7CE1D134438880012E9DA /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = iCPAN;
+			productName = iCPAN;
+			productReference = EDF7CE1F134438880012E9DA /* iCPAN.app */;
+			productType = "com.apple.product-type.application";
+		};
+		EDF7CE4C134438890012E9DA /* iCPANTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = EDF7CE64134438890012E9DA /* Build configuration list for PBXNativeTarget "iCPANTests" */;
+			buildPhases = (
+				EDF7CE48134438890012E9DA /* Sources */,
+				EDF7CE49134438890012E9DA /* Frameworks */,
+				EDF7CE4A134438890012E9DA /* Resources */,
+				EDF7CE4B134438890012E9DA /* ShellScript */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				EDF7CE53134438890012E9DA /* PBXTargetDependency */,
+			);
+			name = iCPANTests;
+			productName = iCPANTests;
+			productReference = EDF7CE4D134438890012E9DA /* iCPANTests.octest */;
+			productType = "com.apple.product-type.bundle";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		EDF7CE16134438880012E9DA /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				ORGANIZATIONNAME = wundersolutions.com;
+			};
+			buildConfigurationList = EDF7CE19134438880012E9DA /* Build configuration list for PBXProject "iCPAN" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = EDF7CE14134438880012E9DA;
+			productRefGroup = EDF7CE20134438880012E9DA /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				EDF7CE1E134438880012E9DA /* iCPAN */,
+				EDF7CE4C134438890012E9DA /* iCPANTests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		EDF7CE1D134438880012E9DA /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				EDF7CE30134438880012E9DA /* InfoPlist.strings in Resources */,
+				EDF7CE40134438880012E9DA /* MainWindow_iPhone.xib in Resources */,
+				EDF7CE47134438880012E9DA /* MainWindow_iPad.xib in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		EDF7CE4A134438890012E9DA /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				EDF7CE59134438890012E9DA /* InfoPlist.strings in Resources */,
+				EDF7CE5C134438890012E9DA /* iCPANTests.h in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		EDF7CE4B134438890012E9DA /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# Run the unit tests in this test bundle.\n\"${SYSTEM_DEVELOPER_DIR}/Tools/RunUnitTests\"\n";
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		EDF7CE1B134438880012E9DA /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				EDF7CE33134438880012E9DA /* main.m in Sources */,
+				EDF7CE36134438880012E9DA /* iCPANAppDelegate.m in Sources */,
+				EDF7CE39134438880012E9DA /* iCPAN.xcdatamodeld in Sources */,
+				EDF7CE3D134438880012E9DA /* iCPANAppDelegate_iPhone.m in Sources */,
+				EDF7CE44134438880012E9DA /* iCPANAppDelegate_iPad.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		EDF7CE48134438890012E9DA /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				EDF7CE5E134438890012E9DA /* iCPANTests.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		EDF7CE53134438890012E9DA /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = EDF7CE1E134438880012E9DA /* iCPAN */;
+			targetProxy = EDF7CE52134438890012E9DA /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		EDF7CE2E134438880012E9DA /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				EDF7CE2F134438880012E9DA /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+		EDF7CE3E134438880012E9DA /* MainWindow_iPhone.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				EDF7CE3F134438880012E9DA /* en */,
+			);
+			name = MainWindow_iPhone.xib;
+			sourceTree = "<group>";
+		};
+		EDF7CE45134438880012E9DA /* MainWindow_iPad.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				EDF7CE46134438880012E9DA /* en */,
+			);
+			name = MainWindow_iPad.xib;
+			sourceTree = "<group>";
+		};
+		EDF7CE57134438890012E9DA /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				EDF7CE58134438890012E9DA /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		EDF7CE5F134438890012E9DA /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = DEBUG;
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_VERSION = com.apple.compilers.llvmgcc42;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		EDF7CE60134438890012E9DA /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_VERSION = com.apple.compilers.llvmgcc42;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
+				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		EDF7CE62134438890012E9DA /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				COPY_PHASE_STRIP = NO;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "iCPAN/iCPAN-Prefix.pch";
+				INFOPLIST_FILE = "iCPAN/iCPAN-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Debug;
+		};
+		EDF7CE63134438890012E9DA /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				COPY_PHASE_STRIP = YES;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "iCPAN/iCPAN-Prefix.pch";
+				INFOPLIST_FILE = "iCPAN/iCPAN-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				VALIDATE_PRODUCT = YES;
+				WRAPPER_EXTENSION = app;
+			};
+			name = Release;
+		};
+		EDF7CE65134438890012E9DA /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/iCPAN.app/iCPAN";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(SDKROOT)/Developer/Library/Frameworks",
+					"$(DEVELOPER_LIBRARY_DIR)/Frameworks",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "iCPANTests/iCPANTests-Prefix.pch";
+				INFOPLIST_FILE = "iCPANTests/iCPANTests-Info.plist";
+				OTHER_LDFLAGS = (
+					"-framework",
+					SenTestingKit,
+				);
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUNDLE_LOADER)";
+				WRAPPER_EXTENSION = octest;
+			};
+			name = Debug;
+		};
+		EDF7CE66134438890012E9DA /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/iCPAN.app/iCPAN";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(SDKROOT)/Developer/Library/Frameworks",
+					"$(DEVELOPER_LIBRARY_DIR)/Frameworks",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "iCPANTests/iCPANTests-Prefix.pch";
+				INFOPLIST_FILE = "iCPANTests/iCPANTests-Info.plist";
+				OTHER_LDFLAGS = (
+					"-framework",
+					SenTestingKit,
+				);
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUNDLE_LOADER)";
+				WRAPPER_EXTENSION = octest;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		EDF7CE19134438880012E9DA /* Build configuration list for PBXProject "iCPAN" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				EDF7CE5F134438890012E9DA /* Debug */,
+				EDF7CE60134438890012E9DA /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		EDF7CE61134438890012E9DA /* Build configuration list for PBXNativeTarget "iCPAN" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				EDF7CE62134438890012E9DA /* Debug */,
+				EDF7CE63134438890012E9DA /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+		EDF7CE64134438890012E9DA /* Build configuration list for PBXNativeTarget "iCPANTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				EDF7CE65134438890012E9DA /* Debug */,
+				EDF7CE66134438890012E9DA /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCVersionGroup section */
+		EDF7CE37134438880012E9DA /* iCPAN.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				EDF7CE38134438880012E9DA /* iCPAN.xcdatamodel */,
+			);
+			currentVersion = EDF7CE38134438880012E9DA /* iCPAN.xcdatamodel */;
+			path = iCPAN.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
+	};
+	rootObject = EDF7CE16134438880012E9DA /* Project object */;
+}
