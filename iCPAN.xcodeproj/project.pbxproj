@@ -7,6 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		ED4B5C091383761600386B42 /* iCPANSplitViewAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = ED4B5C021383761600386B42 /* iCPANSplitViewAppDelegate.m */; };
+		ED4B5C0A1383761600386B42 /* MainWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = ED4B5C031383761600386B42 /* MainWindow.xib */; };
+		ED4B5C0B1383761600386B42 /* DetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = ED4B5C051383761600386B42 /* DetailViewController.m */; };
+		ED4B5C0C1383761600386B42 /* DetailView.xib in Resources */ = {isa = PBXBuildFile; fileRef = ED4B5C061383761600386B42 /* DetailView.xib */; };
+		ED4B5C0D1383761600386B42 /* RootViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = ED4B5C081383761600386B42 /* RootViewController.m */; };
 		EDEC879A13477D3F00F29F4C /* NSObject+JSON.m in Sources */ = {isa = PBXBuildFile; fileRef = EDEC878913477D3F00F29F4C /* NSObject+JSON.m */; };
 		EDEC879B13477D3F00F29F4C /* SBJsonParser.m in Sources */ = {isa = PBXBuildFile; fileRef = EDEC878B13477D3F00F29F4C /* SBJsonParser.m */; };
 		EDEC879C13477D3F00F29F4C /* SBJsonStreamParser.m in Sources */ = {isa = PBXBuildFile; fileRef = EDEC878D13477D3F00F29F4C /* SBJsonStreamParser.m */; };
@@ -48,6 +53,14 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		ED4B5C011383761600386B42 /* iCPANSplitViewAppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = iCPANSplitViewAppDelegate.h; sourceTree = "<group>"; };
+		ED4B5C021383761600386B42 /* iCPANSplitViewAppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = iCPANSplitViewAppDelegate.m; sourceTree = "<group>"; };
+		ED4B5C031383761600386B42 /* MainWindow.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MainWindow.xib; sourceTree = "<group>"; };
+		ED4B5C041383761600386B42 /* DetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DetailViewController.h; sourceTree = "<group>"; };
+		ED4B5C051383761600386B42 /* DetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DetailViewController.m; sourceTree = "<group>"; };
+		ED4B5C061383761600386B42 /* DetailView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DetailView.xib; sourceTree = "<group>"; };
+		ED4B5C071383761600386B42 /* RootViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RootViewController.h; sourceTree = "<group>"; };
+		ED4B5C081383761600386B42 /* RootViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RootViewController.m; sourceTree = "<group>"; };
 		EDEC878713477D3F00F29F4C /* JSON.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JSON.h; sourceTree = "<group>"; };
 		EDEC878813477D3F00F29F4C /* NSObject+JSON.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSObject+JSON.h"; sourceTree = "<group>"; };
 		EDEC878913477D3F00F29F4C /* NSObject+JSON.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSObject+JSON.m"; sourceTree = "<group>"; };
@@ -213,6 +226,14 @@
 		EDF7CE41134438880012E9DA /* iPad */ = {
 			isa = PBXGroup;
 			children = (
+				ED4B5C011383761600386B42 /* iCPANSplitViewAppDelegate.h */,
+				ED4B5C021383761600386B42 /* iCPANSplitViewAppDelegate.m */,
+				ED4B5C031383761600386B42 /* MainWindow.xib */,
+				ED4B5C041383761600386B42 /* DetailViewController.h */,
+				ED4B5C051383761600386B42 /* DetailViewController.m */,
+				ED4B5C061383761600386B42 /* DetailView.xib */,
+				ED4B5C071383761600386B42 /* RootViewController.h */,
+				ED4B5C081383761600386B42 /* RootViewController.m */,
 				EDF7CE42134438880012E9DA /* iCPANAppDelegate_iPad.h */,
 				EDF7CE43134438880012E9DA /* iCPANAppDelegate_iPad.m */,
 				EDF7CE45134438880012E9DA /* MainWindow_iPad.xib */,
@@ -313,6 +334,8 @@
 				EDF7CE30134438880012E9DA /* InfoPlist.strings in Resources */,
 				EDF7CE40134438880012E9DA /* MainWindow_iPhone.xib in Resources */,
 				EDF7CE47134438880012E9DA /* MainWindow_iPad.xib in Resources */,
+				ED4B5C0A1383761600386B42 /* MainWindow.xib in Resources */,
+				ED4B5C0C1383761600386B42 /* DetailView.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -362,6 +385,9 @@
 				EDEC87A013477D3F00F29F4C /* SBJsonStreamWriterState.m in Sources */,
 				EDEC87A113477D3F00F29F4C /* SBJsonTokeniser.m in Sources */,
 				EDEC87A213477D3F00F29F4C /* SBJsonWriter.m in Sources */,
+				ED4B5C091383761600386B42 /* iCPANSplitViewAppDelegate.m in Sources */,
+				ED4B5C0B1383761600386B42 /* DetailViewController.m in Sources */,
+				ED4B5C0D1383761600386B42 /* RootViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
