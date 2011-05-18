@@ -1,6 +1,6 @@
 //
-//  iCPANSplitViewAppDelegate.h
-//  iCPANSplitView
+//  iCPANAppDelegate_iPad.h
+//  iCPAN
 //
 //  Created by Olaf Alders on 11-05-17.
 //  Copyright 2011 wundersolutions.com. All rights reserved.
@@ -13,7 +13,7 @@
 
 @class DetailViewController;
 
-@interface iCPANSplitViewAppDelegate : NSObject <UIApplicationDelegate> {
+@interface iCPANAppDelegate_iPad : NSObject <UIApplicationDelegate> {
 
 }
 

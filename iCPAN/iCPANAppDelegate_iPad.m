@@ -1,16 +1,16 @@
 //
-//  iCPANSplitViewAppDelegate.m
-//  iCPANSplitView
+//  iCPANAppDelegate_iPad.m
+//  iCPAN
 //
 //  Created by Olaf Alders on 11-05-17.
 //  Copyright 2011 wundersolutions.com. All rights reserved.
 //
 
-#import "iCPANSplitViewAppDelegate.h"
+#import "iCPANAppDelegate_iPad.h"
 
 #import "RootViewController.h"
 
-@implementation iCPANSplitViewAppDelegate
+@implementation iCPANAppDelegate_iPad
 
 
 @synthesize window=_window;

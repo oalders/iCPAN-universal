@@ -1,6 +1,6 @@
 //
 //  DetailViewController.h
-//  iCPANSplitView
+//  iCPAN
 //
 //  Created by Olaf Alders on 11-05-17.
 //  Copyright 2011 wundersolutions.com. All rights reserved.
