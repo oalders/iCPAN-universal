@@ -8,8 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-
-@interface GenericViewController : UIViewController {
+@interface GenericViewController : UIViewController <UISearchDisplayDelegate, UITableViewDataSource, UITableViewDelegate> {
     
 }
 
