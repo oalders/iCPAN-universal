@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "iCPANAppDelegate.h"
 
 @class RootViewController;
 
