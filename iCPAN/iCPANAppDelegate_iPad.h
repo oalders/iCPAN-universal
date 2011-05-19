@@ -13,8 +13,7 @@
 
 @class DetailViewController;
 
-@interface iCPANAppDelegate_iPad : NSObject <UIApplicationDelegate> {
-
+@interface iCPANAppDelegate_iPad : iCPANAppDelegate {
 }
 
 @property (nonatomic, retain) IBOutlet UIWindow *window;
