@@ -8,7 +8,7 @@
 
 #import "DetailViewController.h"
 
-#import "RootViewController.h"
+#import "GenericViewController.h"
 
 @interface DetailViewController ()
 @property (nonatomic, retain) UIPopoverController *popoverController;
