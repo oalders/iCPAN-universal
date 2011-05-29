@@ -7,9 +7,12 @@
 //
 
 #import "GenericViewController.h"
+#import "iCPANAppDelegate_iPad.h"
 
 
 @implementation GenericViewController
+
+@synthesize managedObjectContext;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -39,6 +42,9 @@
 {
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
+    
+    iCPANAppDelegate *del = [[UIApplication sharedApplication] delegate];
+    NSManagedObjectContext *con = del.managedObjectContext;
 }
 
 - (void)viewDidUnload

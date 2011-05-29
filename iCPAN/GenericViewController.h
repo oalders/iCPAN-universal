@@ -9,7 +9,9 @@
 #import <UIKit/UIKit.h>
 
 @interface GenericViewController : UIViewController <UISearchDisplayDelegate, UITableViewDataSource, UITableViewDelegate> {
-    
+    NSManagedObjectContext *managedObjectContext;
 }
+
+@property (nonatomic, retain) NSManagedObjectContext *managedObjectContext;
 
 @end
