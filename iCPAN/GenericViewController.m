@@ -14,6 +14,27 @@
 
 @synthesize managedObjectContext;
 
+- (void) insertDummyData
+{
+    
+    iCPANAppDelegate *del = [[UIApplication sharedApplication] delegate];
+    NSManagedObjectContext *context = del.managedObjectContext;
+    
+    //NSManagedObjectContext *context = [self managedObjectContext];
+    NSManagedObject *author = [NSEntityDescription
+                               insertNewObjectForEntityForName:@"Author" 
+                               inManagedObjectContext:context];
+    [author setValue:@"OALDERS" forKey:@"pauseid"];
+    [author setValue:@"Olaf Alders" forKey:@"name"];
+    [author setValue:@"olaf@wundersolutions.com" forKey:@"email"];
+    
+    NSError *error;
+    if (![context save:&error]) {
+        NSLog(@"Whoops, couldn't save: %@", [error localizedDescription]);
+    }
+    NSLog(@"dummy data inserted");
+}
+
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
@@ -43,8 +64,7 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
     
-    iCPANAppDelegate *del = [[UIApplication sharedApplication] delegate];
-    NSManagedObjectContext *con = del.managedObjectContext;
+    [self insertDummyData];
 }
 
 - (void)viewDidUnload
@@ -85,5 +105,6 @@
     cell.textLabel.text = [NSString stringWithFormat:@"Row %d", indexPath.row];
     return cell;
 }
+
 
 @end

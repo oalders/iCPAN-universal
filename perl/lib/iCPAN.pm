@@ -47,7 +47,7 @@ sub scroll {
             scroll    => '5m'
         );
         
-        #last if scalar @hits > 100;
+        last if scalar @hits > 10;
 
     }
 
@@ -81,7 +81,7 @@ sub insert_authors {
         push @authors,
             {
             zpauseid => $src->{pauseid},
-            zname    => (!reftype $src->{name}) ? $src->{name} : undef,
+            zname    => (ref $src->{name}) ? undef : $src->{name},
             zemail   => shift @{ $src->{email} },
             };
     }
@@ -91,10 +91,10 @@ sub insert_authors {
 }
 
 
-sub insert_modules {
+sub insert_distributions {
 
     my $self = shift;
-    my $rs = $self->schema->resultset( 'Zmodule' );
+    my $rs = $self->schema->resultset( 'Zdistribution' );
     $rs->delete;
     
     my $result = $self->es->search(
@@ -105,7 +105,7 @@ sub insert_modules {
             #match_all => {},
         },
         scroll => '5m',
-        size   => 10,
+        size   => 100,
         explain => 0,
     );
     
@@ -116,12 +116,12 @@ sub insert_modules {
     
     foreach my $src ( @{$hits} ) {
         say dump $src;
-        return;
+        #return;
         push @rows,
             {
-            zpauseid => $src->{pauseid},
-            zname    => (!reftype $src->{name}) ? $src->{name} : undef,
-            zemail   => shift @{ $src->{email} },
+            zabstract => $src->{abstract},
+            zversion => $src->{version_numified},
+            zname    => $src->{name},
             };
     }
     

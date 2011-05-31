@@ -10,9 +10,9 @@ my $icpan = iCPAN->new;
 $icpan->db_file( 'iCPAN.sqlite' );
 my $schema = $icpan->schema;
 
-#$icpan->insert_authors;
+$icpan->insert_authors;
 
-$icpan->insert_modules;
-
+my $inserts = $icpan->insert_distributions;
+say dump( $inserts ) . " distributions inserted";
 
 #say dump $schema;
