@@ -1,16 +1,23 @@
 package iCPAN;
 
+use CHI;
 use Data::Dump qw( dump );
 use ElasticSearch;
 use Modern::Perl;
 use Moose;
+use WWW::Mechanize::Cached;
 
 with 'iCPAN::Role::DB';
 with 'iCPAN::Role::Common';
 
 use iCPAN::Schema;
 
+# ssh -L 9201:localhost:9200 metacpan@api.beta.metacpan.org -p222 -N
+
 has 'es' => ( is => 'rw', isa => 'ElasticSearch', lazy_build => 1 );
+has 'index' => ( is => 'rw', default => 'v0' );
+has 'mech' =>
+    ( is => 'rw', isa => 'WWW::Mechanize::Cached', lazy_build => 1 );
 
 sub _build_es {
 
@@ -21,6 +28,19 @@ sub _build_es {
         trace_calls  => 'log_file',
         no_refresh   => 1,
     );
+
+}
+
+sub _build_mech {
+
+    my $self  = shift;
+    my $cache = CHI->new(
+        driver   => 'File',
+        root_dir => '/tmp/mech-example'
+    );
+
+    my $mech = WWW::Mechanize::Cached->new( autocheck => 0, cache => $cache );
+    return $mech;
 
 }
 
@@ -46,7 +66,7 @@ sub scroll {
             scroll_id => $result->{_scroll_id},
             scroll    => '5m'
         );
-        
+
         last if scalar @hits > 10;
 
     }
@@ -56,77 +76,137 @@ sub scroll {
 
 sub insert_authors {
 
-    my $self = shift;
+    my $self      = shift;
     my $author_rs = $self->schema->resultset( 'Zauthor' );
     $author_rs->delete;
-    
+
     my $result = $self->es->search(
-        index => 'cpan',
+        index => $self->index,
         type  => 'author',
         query => {
+
             #term    => { pauseid => 'OALDERS' },
             match_all => {},
         },
         scroll => '5m',
-        size   => 500,
+        size   => 10,
     );
-    
+
     my $hits    = $self->scroll( $result );
     my @authors = ();
-    
+
     say "found " . scalar @{$hits} . " hits";
-    
+
     foreach my $src ( @{$hits} ) {
         say dump $src;
         push @authors,
             {
             zpauseid => $src->{pauseid},
-            zname    => (ref $src->{name}) ? undef : $src->{name},
+            zname    => ( ref $src->{name} ) ? undef : $src->{name},
             zemail   => shift @{ $src->{email} },
             };
     }
-    
-    return $author_rs->populate( \@authors );
-    
-}
 
+    return $author_rs->populate( \@authors );
+
+}
 
 sub insert_distributions {
 
     my $self = shift;
-    my $rs = $self->schema->resultset( 'Zdistribution' );
+    my $rs   = $self->schema->resultset( 'Zdistribution' );
     $rs->delete;
-    
+
     my $result = $self->es->search(
-        index => 'cpan',
+        index => $self->index,
         type  => ['release'],
         query => {
-            term    => { status => 'latest' },
+            term => { status => 'latest' },
+
             #match_all => {},
         },
-        scroll => '5m',
-        size   => 100,
+        scroll  => '5m',
+        size    => 100,
         explain => 0,
     );
-    
-    my $hits    = $self->scroll( $result );
+
+    my $hits = $self->scroll( $result );
     my @rows = ();
-    
+
     say "found " . scalar @{$hits} . " hits";
-    
+
     foreach my $src ( @{$hits} ) {
         say dump $src;
+
         #return;
         push @rows,
             {
             zabstract => $src->{abstract},
-            zversion => $src->{version_numified},
-            zname    => $src->{name},
+            zversion  => $src->{version_numified},
+            zname     => $src->{name},
             };
     }
-    
+
     return $rs->populate( \@rows );
-    
+
+}
+
+sub insert_modules {
+
+    my $self = shift;
+    my $rs   = $self->schema->resultset( 'Zmodule' );
+    $rs->delete;
+
+    my $result = $self->es->search(
+        index => $self->index,
+        type  => ['file'],
+
+        query    => { "match_all" => {} },
+        "filter" => {
+            "and" => [
+                { "exists" => { "field"       => "file.documentation" } },
+                { "term"   => { "file.status" => "latest" } }
+            ]
+        },
+
+        #"fields" => [ "documentation", "author", "release", "distribution" ],
+        scroll  => '5m',
+        size    => 10,
+        explain => 0,
+    );
+
+    my $hits = $self->scroll( $result );
+    my @rows = ();
+
+    say "found " . scalar @{$hits} . " hits";
+
+    foreach my $src ( @{$hits} ) {
+        say dump $src;
+
+        #return;
+        #exit;
+        my $pod = $self->mech->get(
+                "http://api.beta.metacpan.org/pod/" . $src->{documentation}
+            )->is_success ? $self->mech->content : undef;
+        
+        if ( !$pod ) {
+            say "no pod found.  skipping!!!";
+            next;
+        }
+        
+        push @rows, {
+            zabstract => $src->{abstract},
+            zauthor  => $src->{author},
+            zname => $src->{documentation},
+            zpod  => $pod,
+        };
+        
+        say "dumping last row: " . dump $rows[-1];
+    }
+
+    say dump( \@rows );
+    #return $rs->populate( \@rows );
+    return \@rows;
 }
 
 1;
