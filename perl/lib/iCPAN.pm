@@ -22,9 +22,9 @@ has 'mech' =>
 sub _build_es {
 
     return ElasticSearch->new(
-        servers      => 'localhost:9201',
+        servers      => 'api.beta.metacpan.org:80',
         transport    => 'httplite',
-        max_requests => 0,                  # default 10_000
+        max_requests => 0,                            # default 10_000
         trace_calls  => 'log_file',
         no_refresh   => 1,
     );
@@ -81,13 +81,9 @@ sub insert_authors {
     $author_rs->delete;
 
     my $result = $self->es->search(
-        index => $self->index,
-        type  => 'author',
-        query => {
-
-            #term    => { pauseid => 'OALDERS' },
-            match_all => {},
-        },
+        index  => $self->index,
+        type   => 'author',
+        query  => { match_all => {}, },
         scroll => '5m',
         size   => 10,
     );
@@ -185,26 +181,32 @@ sub insert_modules {
 
         #return;
         #exit;
-        my $pod = $self->mech->get(
-                "http://api.beta.metacpan.org/pod/" . $src->{documentation}
-            )->is_success ? $self->mech->content : undef;
-        
+        my $pod_url = "http://metacpan.org:5001/pod/" . $src->{documentation};
+        say "GETting: $pod_url";
+
+        my $pod
+            = $self->mech->get( $pod_url )->is_success
+            ? $self->mech->content
+            : undef;
+
         if ( !$pod ) {
             say "no pod found.  skipping!!!";
             next;
         }
-        
-        push @rows, {
+
+        push @rows,
+            {
             zabstract => $src->{abstract},
-            zauthor  => $src->{author},
-            zname => $src->{documentation},
-            zpod  => $pod,
-        };
-        
+            zname     => $src->{documentation},
+            zpod      => $pod,
+            distribution => $src->{distribution},
+            };
+
         say "dumping last row: " . dump $rows[-1];
     }
 
     say dump( \@rows );
+
     #return $rs->populate( \@rows );
     return \@rows;
 }

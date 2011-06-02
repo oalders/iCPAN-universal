@@ -8,7 +8,7 @@ use Find::Lib;
 has 'db_file' => (
     is         => 'rw',
     isa        => 'Str',
-    lazy_build => 1,
+    default    => 'iCPAN.sqlite',
 );
 
 has 'dsn' => (

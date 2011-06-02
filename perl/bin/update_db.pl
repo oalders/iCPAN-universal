@@ -10,8 +10,10 @@ use iCPAN;
 my $icpan = iCPAN->new;
 $icpan->db_file( 'iCPAN.sqlite' );
 my $schema = $icpan->schema;
+say dump( $schema );
+exit;
 
-$icpan->index( 'cpan' );
+#$icpan->index( 'cpan' );
 #$icpan->insert_authors;
 
 #my $inserts = $icpan->insert_distributions;
