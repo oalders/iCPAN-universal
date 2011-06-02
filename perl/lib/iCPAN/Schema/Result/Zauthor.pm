@@ -73,4 +73,10 @@ __PACKAGE__->set_primary_key("z_pk");
 
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration
+
+__PACKAGE__->has_many(
+    Distributions => 'iCPAN::Schema::Result::Zdistribution',
+    { 'foreign.zauthor' => 'self.z_pk' }
+);
+
 1;
