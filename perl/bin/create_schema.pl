@@ -1,6 +1,5 @@
 #!/usr/bin/env perl
 
-use Modern::Perl;
 use Data::Dump qw( dump );
 use DBIx::Class::Schema::Loader qw( make_schema_at );
 use Find::Lib '../lib';

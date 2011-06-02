@@ -47,27 +47,18 @@ sub _build_mech {
 sub scroll {
 
     my $self   = shift;
-    my $result = shift;
+    my $scroller = shift;
+    my $limit = shift;
     my @hits   = ();
 
-    while ( 1 ) {
+    while ( my $result = $scroller->next ) {
 
-        my $hits = $result->{hits}{hits};
+        #say dump $result;
+        
+        push @hits, exists $result->{'_source'} ? $result->{'_source'} : $result->{fields};
+        say dump $hits[-1];
 
-        last unless @$hits;    # if no hits, we're finished
-
-        say "found " . scalar @{$hits} . " hits";
-
-        foreach my $hit ( @{$hits} ) {
-            push @hits, $hit->{'_source'};
-        }
-
-        $result = $self->es->scroll(
-            scroll_id => $result->{_scroll_id},
-            scroll    => '5m'
-        );
-
-        last if scalar @hits > 10;
+        last if scalar @hits > $limit;
 
     }
 
@@ -85,7 +76,7 @@ sub insert_authors {
         type   => 'author',
         query  => { match_all => {}, },
         scroll => '5m',
-        size   => 10,
+        size   => 100,
     );
 
     my $hits    = $self->scroll( $result );
@@ -153,30 +144,33 @@ sub insert_modules {
     my $rs   = $self->schema->resultset( 'Zmodule' );
     $rs->delete;
 
-    my $result = $self->es->search(
+    my $scroller = $self->es->scrolled_search(
         index => $self->index,
         type  => ['file'],
 
-        query    => { "match_all" => {} },
+        query => { "match_all" => {} },
+
         "filter" => {
             "and" => [
                 { "exists" => { "field"       => "file.documentation" } },
-                { "term"   => { "file.status" => "latest" } }
+                { "term"   => { "file.status" => "latest" } },
+                { "prefix" => { "file.documentation" => "DBIx::" } },
             ]
         },
 
-        #"fields" => [ "documentation", "author", "release", "distribution" ],
+        "fields" => [ "abstract.analyzed", "documentation", "distribution" ],
         scroll  => '5m',
-        size    => 10,
+        size    => 100,
         explain => 0,
     );
 
-    my $hits = $self->scroll( $result );
+    my $hits = $self->scroll( $scroller, 500 );
     my @rows = ();
 
     say "found " . scalar @{$hits} . " hits";
 
     foreach my $src ( @{$hits} ) {
+        next if !$src;
         say dump $src;
 
         #return;
@@ -194,21 +188,26 @@ sub insert_modules {
             next;
         }
 
-        push @rows,
-            {
-            zabstract => $src->{abstract},
+        my %row = (
+            zabstract => $src->{'abstract.analyzed'},
             zname     => $src->{documentation},
             zpod      => $pod,
-            distribution => $src->{distribution},
-            };
+        );
 
-        say "dumping last row: " . dump $rows[-1];
+        my $dist = $self->schema->resultset( 'Zdistribution' )
+            ->find_or_create( { zname => $src->{distribution} } );
+            
+        if ( $dist ) {
+            my $module = $dist->create_related( 'Modules',
+                { zname => $src->{documentation}, } );
+            $module->update( \%row );
+        }
+
+        say "dumping last row: " . dump \%row;
     }
 
-    say dump( \@rows );
-
     #return $rs->populate( \@rows );
-    return \@rows;
+    return;
 }
 
 1;
