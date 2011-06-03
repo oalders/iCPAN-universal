@@ -79,18 +79,21 @@ sub insert_authors {
         type   => 'author',
         query  => { match_all => {}, },
         scroll => '5m',
-        size   => 100,
+        size   => 10000,
     );
 
     my $hits = $self->scroll( $scroller, 10000 );
     my @authors = ();
 
     say "found " . scalar @{$hits} . " hits";
+    my $ent = $self->get_ent( 'Author' );
 
     foreach my $src ( @{$hits} ) {
-        say dump $src;
+        #say dump $src;
         push @authors,
             {
+            z_ent    => $ent->z_ent,
+            z_opt    => 1,
             zpauseid => $src->{pauseid},
             zname    => ( ref $src->{name} ) ? undef : $src->{name},
             zemail   => shift @{ $src->{email} },
@@ -130,6 +133,8 @@ sub insert_distributions {
 
     say "found " . scalar @{$hits} . " hits";
 
+    my $ent = $self->get_ent( 'Distribution' );
+
     foreach my $src ( @{$hits} ) {
         say dump $src;
 
@@ -142,6 +147,8 @@ sub insert_distributions {
 
         push @rows,
             {
+            z_ent         => $ent->z_ent,
+            z_opt         => 1,
             zabstract     => $src->{abstract},
             zauthor       => $author->z_pk,
             zrelease_date => $src->{date},
@@ -159,7 +166,7 @@ sub insert_modules {
     my $self = shift;
     my $rs   = $self->schema->resultset( 'Zmodule' );
     $rs->delete;
-    
+
     my $size = 250;
 
     my $scroller = $self->es->scrolled_search(
@@ -182,9 +189,11 @@ sub insert_modules {
         explain  => 0,
     );
 
-    my @rows = ( );
+    my $ent = $self->get_ent( 'Module' );
+
+    my @rows = ();
     while ( my $result = $scroller->next ) {
-        
+
         my $src = $self->extract_hit( $result );
         next if !$src;
         say dump $src;
@@ -212,6 +221,8 @@ sub insert_modules {
 
         push @rows,
             {
+            z_ent         => $ent->z_ent,
+            z_opt         => 1,
             zabstract     => $src->{'abstract.analyzed'},
             zdistribution => $dist->z_pk,
             zname         => $src->{documentation},
@@ -219,9 +230,9 @@ sub insert_modules {
             };
 
         if ( scalar @rows >= $size ) {
-            say "inserting "  . scalar @rows . " rows";
+            say "inserting " . scalar @rows . " rows";
             $rs->populate( \@rows );
-            @rows = ( );
+            @rows = ();
         }
     }
 
@@ -233,14 +244,24 @@ sub insert_modules {
 }
 
 sub extract_hit {
-    
-    my $self = shift;
+
+    my $self   = shift;
     my $result = shift;
-    
+
     return exists $result->{'_source'}
-            ? $result->{'_source'}
-            : $result->{fields};
-    
+        ? $result->{'_source'}
+        : $result->{fields};
+
+}
+
+sub get_ent {
+
+    my $self  = shift;
+    my $table = shift;
+
+    return $self->schema->resultset( 'ZPrimarykey' )
+        ->find( { z_name => $table } );
+
 }
 
 1;
