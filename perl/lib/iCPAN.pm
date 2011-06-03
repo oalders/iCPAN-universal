@@ -71,8 +71,8 @@ sub scroll {
 sub insert_authors {
 
     my $self      = shift;
-    my $author_rs = $self->schema->resultset( 'Zauthor' );
-    $author_rs->delete;
+    my $rs = $self->schema->resultset( 'Zauthor' );
+    $rs->delete;
 
     my $scroller = $self->es->scrolled_search(
         index  => $self->index,
@@ -100,8 +100,10 @@ sub insert_authors {
             };
     }
 
-    return $author_rs->populate( \@authors );
-
+    $rs->populate( \@authors );
+    $self->update_ent( $rs, $ent );
+    return;
+    
 }
 
 sub insert_distributions {
@@ -157,7 +159,9 @@ sub insert_distributions {
             };
     }
 
-    return $rs->populate( \@rows );
+    $rs->populate( \@rows );
+    $self->update_ent( $rs, $ent );
+    return;
 
 }
 
@@ -232,13 +236,16 @@ sub insert_modules {
         if ( scalar @rows >= $size ) {
             say "inserting " . scalar @rows . " rows";
             $rs->populate( \@rows );
+            $self->update_ent( $rs, $ent );
             @rows = ();
         }
     }
 
     say dump \@rows;
 
-    return $rs->populate( \@rows ) if scalar @rows;
+    $rs->populate( \@rows ) if scalar @rows;    
+    $self->update_ent( $rs, $ent );
+    
     return;
 
 }
@@ -262,6 +269,15 @@ sub get_ent {
     return $self->schema->resultset( 'ZPrimarykey' )
         ->find( { z_name => $table } );
 
+}
+
+sub update_ent {
+    
+    my ( $self, $rs, $ent ) = @_;
+    my $last = $rs->search({}, { order_by => 'z_pk DESC'})->first;
+    $ent->z_max( $last->id );
+    $ent->update;
+    
 }
 
 1;
