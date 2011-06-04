@@ -12,7 +12,7 @@
 
 @implementation GenericViewController
 
-@synthesize managedObjectContext;
+@synthesize managedObjectContext, searchResults;
 
 - (void) insertDummyData
 {
@@ -20,19 +20,41 @@
     iCPANAppDelegate *del = [[UIApplication sharedApplication] delegate];
     NSManagedObjectContext *context = del.managedObjectContext;
     
-    //NSManagedObjectContext *context = [self managedObjectContext];
-    NSManagedObject *author = [NSEntityDescription
-                               insertNewObjectForEntityForName:@"Author" 
-                               inManagedObjectContext:context];
-    [author setValue:@"OALDERS" forKey:@"pauseid"];
-    [author setValue:@"Olaf Alders" forKey:@"name"];
-    [author setValue:@"olaf@wundersolutions.com" forKey:@"email"];
+    //NSManagedObject *author = [NSEntityDescription
+    //                           insertNewObjectForEntityForName:@"Author" 
+    //                           inManagedObjectContext:context];
+    //[author setValue:@"OALDERS" forKey:@"pauseid"];
+    //[author setValue:@"Olaf Alders" forKey:@"name"];
+    //[author setValue:@"olaf@wundersolutions.com" forKey:@"email"];
     
     NSError *error;
-    if (![context save:&error]) {
-        NSLog(@"Whoops, couldn't save: %@", [error localizedDescription]);
+    //if (![context save:&error]) {
+    //    NSLog(@"Whoops, couldn't save: %@ %@", [error localizedDescription], error);
+    //}
+    //NSLog(@"dummy data inserted");
+    
+    NSFetchRequest *request = [[NSFetchRequest alloc] init];
+    NSEntityDescription *entity = [NSEntityDescription entityForName:@"Module" inManagedObjectContext:context];
+    [request setEntity:entity];
+    [request setFetchLimit:50];
+    
+    NSSortDescriptor *sort = [[NSSortDescriptor alloc] initWithKey:@"name" ascending:YES selector:@selector(caseInsensitiveCompare:)];
+    [request setSortDescriptors:[NSArray arrayWithObject:sort]];
+    
+    // Execute the fetch — create a mutable copy of the result.
+    error = nil;
+    NSMutableArray *mutableFetchResults = [[context executeFetchRequest:request error:&error] mutableCopy];
+    NSLog(@"got %i results", [mutableFetchResults count]);
+    if (mutableFetchResults == nil) {
+        // Handle the error.
+        NSLog(@"Whoops, couldn't read: %@", [error localizedDescription]);
     }
-    NSLog(@"dummy data inserted");
+    self.searchResults = mutableFetchResults;
+    
+    [request release];
+    
+    NSLog(@"tables should have been created");
+    
 }
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -87,7 +109,7 @@
 
 - (NSInteger)tableView:(UITableView *)aTableView numberOfRowsInSection:(NSInteger)section {
     // Return the number of rows in the section.
-    return 10;
+    return [self.searchResults count];
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -102,7 +124,9 @@
     }
     
     // Configure the cell.
-    cell.textLabel.text = [NSString stringWithFormat:@"Row %d", indexPath.row];
+    
+    //NSLog(@"cell %@", [[self.searchResults objectAtIndex:indexPath.row] name]);
+    cell.textLabel.text = [[self.searchResults objectAtIndex:indexPath.row] name];
     return cell;
 }
 
