@@ -124,9 +124,9 @@
     }
     
     // Configure the cell.
-    
     //NSLog(@"cell %@", [[self.searchResults objectAtIndex:indexPath.row] name]);
     cell.textLabel.text = [[self.searchResults objectAtIndex:indexPath.row] name];
+    cell.textLabel.font = [UIFont systemFontOfSize:16];
     return cell;
 }
 
