@@ -6,13 +6,16 @@
 //  Copyright 2011 wundersolutions.com. All rights reserved.
 //
 
-#import "GenericViewController.h"
 #import "iCPANAppDelegate_iPad.h"
+#import "GenericViewController.h"
+#import "DetailViewController.h"
 
 
 @implementation GenericViewController
 
 @synthesize managedObjectContext, searchResults;
+@synthesize detailViewController;
+
 
 - (void) insertDummyData
 {
@@ -68,6 +71,7 @@
 
 - (void)dealloc
 {
+    [self.searchResults dealloc];
     [super dealloc];
 }
 
@@ -130,5 +134,11 @@
     return cell;
 }
 
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    NSLog(@"cell was tapped");
+    // Set the detail item in the detail view controller.
+    NSManagedObject *selectedObject = [self.searchResults objectAtIndex:indexPath.row];
+    detailViewController.detailItem = selectedObject;
+}
 
 @end

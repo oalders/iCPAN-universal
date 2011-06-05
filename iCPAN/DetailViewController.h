@@ -8,6 +8,8 @@
 
 #import <UIKit/UIKit.h>
 
+@class GenericViewController;
+
 @interface DetailViewController : UIViewController <UIPopoverControllerDelegate, UISplitViewControllerDelegate> {
 
 }
@@ -15,8 +17,11 @@
 
 @property (nonatomic, retain) IBOutlet UIToolbar *toolbar;
 
-@property (nonatomic, retain) id detailItem;
+@property (nonatomic, retain) NSManagedObject *detailItem;
 
 @property (nonatomic, retain) IBOutlet UILabel *detailDescriptionLabel;
+
+@property (nonatomic, assign) IBOutlet GenericViewController *genericViewController;
+
 
 @end

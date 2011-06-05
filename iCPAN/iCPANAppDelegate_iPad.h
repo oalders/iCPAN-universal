@@ -9,7 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "iCPANAppDelegate.h"
 
-@class RootViewController;
+@class GenericViewController;
 
 @class DetailViewController;
 
@@ -20,7 +20,7 @@
 
 @property (nonatomic, retain) IBOutlet UISplitViewController *splitViewController;
 
-@property (nonatomic, retain) IBOutlet RootViewController *rootViewController;
+@property (nonatomic, retain) IBOutlet GenericViewController *genericViewController;
 
 @property (nonatomic, retain) IBOutlet DetailViewController *detailViewController;
 

@@ -25,35 +25,40 @@
 
 @synthesize popoverController=_myPopoverController;
 
+@synthesize genericViewController=_genericViewController;
+
 #pragma mark - Managing the detail item
 
 /*
  When setting the detail item, update the view and dismiss the popover controller if it's showing.
  */
-- (void)setDetailItem:(id)newDetailItem
+- (void)setDetailItem:(NSManagedObject *)managedObject
 {
-    if (_detailItem != newDetailItem) {
-        [_detailItem release];
-        _detailItem = [newDetailItem retain];
-        
+	if (_detailItem != managedObject) {
+		[_detailItem release];
+		_detailItem = [managedObject retain];
+		
         // Update the view.
         [self configureView];
-    }
-
+	}
+    
     if (self.popoverController != nil) {
         [self.popoverController dismissPopoverAnimated:YES];
-    }        
+    }		
 }
 
 - (void)configureView
 {
     // Update the user interface for the detail item.
 
-    self.detailDescriptionLabel.text = [self.detailItem description];
+    NSLog(@"detail item %@", self.detailItem);
+    self.detailDescriptionLabel.text = [[self.detailItem valueForKey:@"abstract"] description];
 }
 
 - (void)viewWillAppear:(BOOL)animated
 {
+    NSLog(@"detail view will appear");
+
     [super viewWillAppear:animated];
 }
 

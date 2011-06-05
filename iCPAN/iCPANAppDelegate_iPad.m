@@ -9,6 +9,7 @@
 #import "iCPANAppDelegate_iPad.h"
 
 #import "GenericViewController.h"
+#import "DetailViewController.h"
 
 @implementation iCPANAppDelegate_iPad
 
@@ -17,7 +18,7 @@
 
 @synthesize splitViewController=_splitViewController;
 
-@synthesize rootViewController=_rootViewController;
+@synthesize genericViewController=_genericViewController;
 
 @synthesize detailViewController=_detailViewController;
 
@@ -74,7 +75,7 @@
 {
     [_window release];
     [_splitViewController release];
-    [_rootViewController release];
+    [_genericViewController release];
     [_detailViewController release];
     [super dealloc];
 }

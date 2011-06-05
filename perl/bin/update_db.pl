@@ -27,8 +27,8 @@ if ( $opt->{debug} ) {
 
 my $method =  'insert_' . $opt->{table};
 if ( $opt->{table} eq 'authors' ) {
-    $icpan->server('hostingmirror1.wundersolutions.com:9200');
-    $icpan->index('cpan');    
+#    $icpan->server('hostingmirror1.wundersolutions.com:9200');
+#    $icpan->index('cpan');    
 }
 
 $icpan->$method;
