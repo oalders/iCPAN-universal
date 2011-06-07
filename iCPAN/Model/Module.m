@@ -14,6 +14,16 @@
 @dynamic name;
 @dynamic abstract;
 @dynamic distribution;
+@dynamic path;
+
+- (NSString *)path {
+	
+    NSString *path = [self.name stringByReplacingOccurrencesOfString:@"::" withString:@"-"];
+    path = [path stringByAppendingString:@".html"];
+    
+    return path;
+    
+}
 
 
 @end

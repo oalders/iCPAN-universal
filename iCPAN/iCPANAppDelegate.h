@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "Module.h"
 
 @interface iCPANAppDelegate : NSObject <UIApplicationDelegate> {
 
@@ -17,8 +18,13 @@
 @property (nonatomic, retain, readonly) NSManagedObjectContext *managedObjectContext;
 @property (nonatomic, retain, readonly) NSManagedObjectModel *managedObjectModel;
 @property (nonatomic, retain, readonly) NSPersistentStoreCoordinator *persistentStoreCoordinator;
+@property (nonatomic, retain) Module *selectedModule;
 
 - (void)saveContext;
 - (NSURL *)applicationDocumentsDirectory;
+- (NSString *)cpanpod;
+- (NSDictionary *)getBookmarks;
+- (NSArray *)getRecentlyViewed;
+- (BOOL)isBookmarked:(NSString *)moduleName;
 
 @end

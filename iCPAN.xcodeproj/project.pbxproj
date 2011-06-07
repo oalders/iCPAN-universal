@@ -13,6 +13,10 @@
 		ED4B5C0C1383761600386B42 /* DetailView.xib in Resources */ = {isa = PBXBuildFile; fileRef = ED4B5C061383761600386B42 /* DetailView.xib */; };
 		ED4B5C1F1383844A00386B42 /* GenericViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = ED4B5C1D1383844900386B42 /* GenericViewController.m */; };
 		ED4B5C201383844A00386B42 /* GenericViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = ED4B5C1E1383844900386B42 /* GenericViewController.xib */; };
+		ED725D7E139DDF370006EFA3 /* ModuleViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = ED725D7D139DDF370006EFA3 /* ModuleViewController.m */; };
+		ED725D82139DE5C60006EFA3 /* Author.m in Sources */ = {isa = PBXBuildFile; fileRef = ED725D81139DE5C60006EFA3 /* Author.m */; };
+		ED725D85139DE5C60006EFA3 /* Module.m in Sources */ = {isa = PBXBuildFile; fileRef = ED725D84139DE5C60006EFA3 /* Module.m */; };
+		ED725D88139DE5C60006EFA3 /* Distribution.m in Sources */ = {isa = PBXBuildFile; fileRef = ED725D87139DE5C60006EFA3 /* Distribution.m */; };
 		EDEC879A13477D3F00F29F4C /* NSObject+JSON.m in Sources */ = {isa = PBXBuildFile; fileRef = EDEC878913477D3F00F29F4C /* NSObject+JSON.m */; };
 		EDEC879B13477D3F00F29F4C /* SBJsonParser.m in Sources */ = {isa = PBXBuildFile; fileRef = EDEC878B13477D3F00F29F4C /* SBJsonParser.m */; };
 		EDEC879C13477D3F00F29F4C /* SBJsonStreamParser.m in Sources */ = {isa = PBXBuildFile; fileRef = EDEC878D13477D3F00F29F4C /* SBJsonStreamParser.m */; };
@@ -61,6 +65,14 @@
 		ED4B5C1C1383844900386B42 /* GenericViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GenericViewController.h; sourceTree = "<group>"; };
 		ED4B5C1D1383844900386B42 /* GenericViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GenericViewController.m; sourceTree = "<group>"; };
 		ED4B5C1E1383844900386B42 /* GenericViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = GenericViewController.xib; sourceTree = "<group>"; };
+		ED725D7C139DDF370006EFA3 /* ModuleViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ModuleViewController.h; sourceTree = "<group>"; };
+		ED725D7D139DDF370006EFA3 /* ModuleViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ModuleViewController.m; sourceTree = "<group>"; };
+		ED725D80139DE5C50006EFA3 /* Author.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Author.h; path = Model/Author.h; sourceTree = "<group>"; };
+		ED725D81139DE5C60006EFA3 /* Author.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Author.m; path = Model/Author.m; sourceTree = "<group>"; };
+		ED725D83139DE5C60006EFA3 /* Module.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Module.h; path = Model/Module.h; sourceTree = "<group>"; };
+		ED725D84139DE5C60006EFA3 /* Module.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Module.m; path = Model/Module.m; sourceTree = "<group>"; };
+		ED725D86139DE5C60006EFA3 /* Distribution.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Distribution.h; path = Model/Distribution.h; sourceTree = "<group>"; };
+		ED725D87139DE5C60006EFA3 /* Distribution.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Distribution.m; path = Model/Distribution.m; sourceTree = "<group>"; };
 		EDEC878713477D3F00F29F4C /* JSON.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JSON.h; sourceTree = "<group>"; };
 		EDEC878813477D3F00F29F4C /* NSObject+JSON.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSObject+JSON.h"; sourceTree = "<group>"; };
 		EDEC878913477D3F00F29F4C /* NSObject+JSON.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSObject+JSON.m"; sourceTree = "<group>"; };
@@ -191,7 +203,15 @@
 				EDEC878613477D3F00F29F4C /* JSON */,
 				EDF7CE34134438880012E9DA /* iCPANAppDelegate.h */,
 				EDF7CE35134438880012E9DA /* iCPANAppDelegate.m */,
+				ED725D7C139DDF370006EFA3 /* ModuleViewController.h */,
+				ED725D7D139DDF370006EFA3 /* ModuleViewController.m */,
 				EDF7CE37134438880012E9DA /* iCPAN.xcdatamodeld */,
+				ED725D86139DE5C60006EFA3 /* Distribution.h */,
+				ED725D87139DE5C60006EFA3 /* Distribution.m */,
+				ED725D83139DE5C60006EFA3 /* Module.h */,
+				ED725D84139DE5C60006EFA3 /* Module.m */,
+				ED725D80139DE5C50006EFA3 /* Author.h */,
+				ED725D81139DE5C60006EFA3 /* Author.m */,
 				EDF7CE3A134438880012E9DA /* iPhone */,
 				EDF7CE41134438880012E9DA /* iPad */,
 				EDF7CE2C134438880012E9DA /* Supporting Files */,
@@ -382,6 +402,10 @@
 				ED4B5C091383761600386B42 /* iCPANAppDelegate_iPad.m in Sources */,
 				ED4B5C0B1383761600386B42 /* DetailViewController.m in Sources */,
 				ED4B5C1F1383844A00386B42 /* GenericViewController.m in Sources */,
+				ED725D7E139DDF370006EFA3 /* ModuleViewController.m in Sources */,
+				ED725D82139DE5C60006EFA3 /* Author.m in Sources */,
+				ED725D85139DE5C60006EFA3 /* Module.m in Sources */,
+				ED725D88139DE5C60006EFA3 /* Distribution.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

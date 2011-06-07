@@ -18,4 +18,6 @@
 @property (nonatomic, retain) NSString * abstract;
 @property (nonatomic, retain) NSManagedObject * distribution;
 
+@property (nonatomic, retain) NSString * path;
+
 @end
