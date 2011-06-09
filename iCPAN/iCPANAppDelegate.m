@@ -24,6 +24,7 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     // Override point for customization after application launch.
+        
     [self.window makeKeyAndVisible];
     return YES;
 }
@@ -242,7 +243,31 @@
 }
 
 - (NSURL *)cpanpod {
-	return [[self applicationDocumentsDirectory] URLByAppendingPathComponent:@"/cpanpod/"];
+	NSLog(@"docs dir %@", [self applicationDocumentsDirectory]);
+    return [self applicationDocumentsDirectory];
+    //return [[self applicationDocumentsDirectory] URLByAppendingPathComponent:@"cpanpod"];
+}
+
+-(void) createPodFolder {
+    NSLog(@"appdelegate about to launch");
+    
+	NSFileManager *NSFm= [NSFileManager defaultManager]; 
+	
+	//start clean each time
+    NSLog(@"about to create %@", [[self cpanpod]absoluteString] );
+	if ([NSFm removeItemAtPath: [[self cpanpod]absoluteString] error: NULL]  == YES) {
+        //NSLog (@"Remove successful");
+	}
+	else {
+        NSLog (@"Remove failed");
+	}
+    
+    NSError *createError = nil;
+    
+	[NSFm createDirectoryAtPath:[[self cpanpod] absoluteString]withIntermediateDirectories:NO attributes:nil error:createError];
+    
+    NSLog(@"error: %@", createError);
+
 }
 
 @end

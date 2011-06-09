@@ -10,6 +10,8 @@
 
 #import "GenericViewController.h"
 
+#import "iCPANAppDelegate.h"
+
 @interface DetailViewController ()
 @property (nonatomic, retain) UIPopoverController *popoverController;
 - (void)configureView;
@@ -55,6 +57,21 @@
 
     NSLog(@"detail item %@", self.detailItem);
     self.detailDescriptionLabel.text = [[self.detailItem valueForKey:@"abstract"] description];
+    
+    // More webView loading
+    // Basically, we'll initiate the page load here, but we'll write the page to disk later
+    // This method will only ever be called when the user selects a module from the table
+    // in the GenericView
+	NSLog(@"looking for: %@", [self.detailItem valueForKey:@"name"]);
+    //iCPANAppDelegate *del = [[UIApplication sharedApplication] delegate];
+    
+    //NSURL *url = [[del applicationDocumentsDirectory] URLByAppendingPathComponent:@"pod"];
+    //url = [url URLByAppendingPathComponent:[self.detailItem valueForKey:@"name"]];
+    NSURL *url = [[NSURL alloc] initWithString:[self.detailItem valueForKey:@"name"]];
+	
+	NSURLRequest *requestObj = [NSURLRequest requestWithURL:url];
+	[webView loadRequest:requestObj];
+    
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -87,17 +104,100 @@
 #pragma mark - Loading webView
 
 - (void)viewDidLoad {
+        
+	// allow users to pinch/zoom.  also scales the page by default
+	webView.scalesPageToFit = YES;
     
-    NSString *URLAddress = @"http://www.google.com";
+}
+
+- (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType {
+	
+	iCPANAppDelegate *del = [[UIApplication sharedApplication] delegate];
     
-    //Create a URL object.
-    NSURL *url = [NSURL URLWithString:URLAddress];
+	NSURL *url = [request URL];
+	NSString *path = [url relativePath];
     
-    //URL Requst Object
-    NSURLRequest *requestObj = [NSURLRequest requestWithURL:url];
+	NSLog(@"relativePath: %@", [url relativePath]);
+	NSLog(@"absoluteString: %@", [url absoluteString]);
+	NSLog(@"baseURL: %@", [url baseURL]);	
+	
+	if ([[url absoluteString] rangeOfString:@"http://"].location == NSNotFound ) {
+        
+        // This is an offline page view. We need to handle all of the details.
+        //
+//		//path = [path stringByReplacingOccurrencesOfString:[[del cpanpod] absoluteString] withString:@""];
+		path = [path stringByReplacingOccurrencesOfString:@"-" withString:@"::"];
+		path = [path stringByReplacingOccurrencesOfString:@".html" withString:@""];
+		
+		NSLog(@"module to search for: %@", path);
+        // remove next line once we try to follow links in webView
+        path = [url absoluteString];
+		
+		NSManagedObjectContext *moc = [del managedObjectContext]; 
+		NSFetchRequest *req = [[NSFetchRequest alloc] init];
+		[req setEntity:[NSEntityDescription entityForName:@"Module" inManagedObjectContext:moc]];
+		NSPredicate *predicate = [NSPredicate predicateWithFormat:@"name = %@", path];
+		[req setPredicate:predicate];
+		
+		NSError *error = nil;
+		NSArray *results = [moc executeFetchRequest:req error:&error];
+        
+		if (error) {
+			// Replace this implementation with code to handle the error appropriately.
+            
+			NSLog(@"there has been an error");
+			NSLog(@"fetchedResultsController error %@, %@", error, [error userInfo]);
+			//exit(1);
+		} 
+        
+        
+		if ( results.count > 0 ) {
+			
+			Module *module = [results objectAtIndex:0];
+			//NSLog(@"results for single module search %@", module.name );
+			
+			//NSLog(@"This is a local URL");
+			
+			self.title = module.name;
+			//self.currentlyViewing = module.name;
+			//NSInteger is_bookmarked = [del isBookmarked:path];
+			/*if ( is_bookmarked == 1 ) {
+				[self removeBookmarkButton];
+			}
+			else {
+				[self addBookmarkButton];
+			}
+            */
+			
+			NSString *fileName = module.name;
+			fileName = [fileName stringByReplacingOccurrencesOfString:@"::" withString:@"-"];
+			fileName = [fileName stringByAppendingString:@".html"];
+            NSString *podPath = [[[del cpanpod] URLByAppendingPathComponent:fileName] absoluteString];
+            
+			if ( ![[NSFileManager defaultManager] fileExistsAtPath:podPath] ) {
+				NSLog(@"pod path: %@", del.cpanpod);
+				NSLog(@"pod will be written to: %@", podPath);
+				NSData* pod_data = [module.pod dataUsingEncoding:NSUTF8StringEncoding];
+				[pod_data writeToFile:podPath atomically:YES];
+			}
+		}
+		else {
+			self.navigationItem.rightBarButtonItem = nil;
+			self.title = @"404: Page Not Found";
+		}
+		
+		[req release];
+	}
+	else {
+		// we are now online
+		self.navigationItem.rightBarButtonItem = nil;
+		self.title = [url absoluteString];
+	}
+	
+	//NSArray *dirContents = [[NSFileManager defaultManager] directoryContentsAtPath:del.cpanpod];
+	//NSLog(@"contents %@", dirContents);
     
-    //Load the request in the UIWebView.
-    [webView loadRequest:requestObj];
+	return TRUE;
 }
 
 #pragma mark - Split view support

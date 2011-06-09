@@ -203,9 +203,9 @@
 				EDEC878613477D3F00F29F4C /* JSON */,
 				EDF7CE34134438880012E9DA /* iCPANAppDelegate.h */,
 				EDF7CE35134438880012E9DA /* iCPANAppDelegate.m */,
+				EDF7CE37134438880012E9DA /* iCPAN.xcdatamodeld */,
 				ED725D7C139DDF370006EFA3 /* ModuleViewController.h */,
 				ED725D7D139DDF370006EFA3 /* ModuleViewController.m */,
-				EDF7CE37134438880012E9DA /* iCPAN.xcdatamodeld */,
 				ED725D86139DE5C60006EFA3 /* Distribution.h */,
 				ED725D87139DE5C60006EFA3 /* Distribution.m */,
 				ED725D83139DE5C60006EFA3 /* Module.h */,
@@ -484,7 +484,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
 				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
-				SDKROOT = iphoneos;
+				SDKROOT = iphoneos4.3;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;

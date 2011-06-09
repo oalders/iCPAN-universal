@@ -20,9 +20,10 @@
 @property (nonatomic, retain, readonly) NSPersistentStoreCoordinator *persistentStoreCoordinator;
 @property (nonatomic, retain) Module *selectedModule;
 
-- (void)saveContext;
+- (void) saveContext;
+- (void) createPodFolder;
 - (NSURL *)applicationDocumentsDirectory;
-- (NSString *)cpanpod;
+- (NSURL *)cpanpod;
 - (NSDictionary *)getBookmarks;
 - (NSArray *)getRecentlyViewed;
 - (BOOL)isBookmarked:(NSString *)moduleName;
