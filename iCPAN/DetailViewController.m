@@ -84,6 +84,22 @@
     return YES;
 }
 
+#pragma mark - Loading webView
+
+- (void)viewDidLoad {
+    
+    NSString *URLAddress = @"http://www.google.com";
+    
+    //Create a URL object.
+    NSURL *url = [NSURL URLWithString:URLAddress];
+    
+    //URL Requst Object
+    NSURLRequest *requestObj = [NSURLRequest requestWithURL:url];
+    
+    //Load the request in the UIWebView.
+    [webView loadRequest:requestObj];
+}
+
 #pragma mark - Split view support
 
 - (void)splitViewController:(UISplitViewController *)svc willHideViewController:(UIViewController *)aViewController withBarButtonItem:(UIBarButtonItem *)barButtonItem forPopoverController: (UIPopoverController *)pc
