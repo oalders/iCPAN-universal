@@ -10,7 +10,7 @@
 		ED4B5C091383761600386B42 /* iCPANAppDelegate_iPad.m in Sources */ = {isa = PBXBuildFile; fileRef = ED4B5C021383761600386B42 /* iCPANAppDelegate_iPad.m */; };
 		ED4B5C0A1383761600386B42 /* MainWindow_iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = ED4B5C031383761600386B42 /* MainWindow_iPad.xib */; };
 		ED4B5C0B1383761600386B42 /* DetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = ED4B5C051383761600386B42 /* DetailViewController.m */; };
-		ED4B5C0C1383761600386B42 /* DetailView.xib in Resources */ = {isa = PBXBuildFile; fileRef = ED4B5C061383761600386B42 /* DetailView.xib */; };
+		ED4B5C0C1383761600386B42 /* DetailViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = ED4B5C061383761600386B42 /* DetailViewController.xib */; };
 		ED4B5C1F1383844A00386B42 /* GenericViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = ED4B5C1D1383844900386B42 /* GenericViewController.m */; };
 		ED4B5C201383844A00386B42 /* GenericViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = ED4B5C1E1383844900386B42 /* GenericViewController.xib */; };
 		ED725D7E139DDF370006EFA3 /* ModuleViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = ED725D7D139DDF370006EFA3 /* ModuleViewController.m */; };
@@ -61,7 +61,7 @@
 		ED4B5C031383761600386B42 /* MainWindow_iPad.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MainWindow_iPad.xib; sourceTree = "<group>"; };
 		ED4B5C041383761600386B42 /* DetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DetailViewController.h; sourceTree = "<group>"; };
 		ED4B5C051383761600386B42 /* DetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DetailViewController.m; sourceTree = "<group>"; };
-		ED4B5C061383761600386B42 /* DetailView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DetailView.xib; sourceTree = "<group>"; };
+		ED4B5C061383761600386B42 /* DetailViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DetailViewController.xib; sourceTree = "<group>"; };
 		ED4B5C1C1383844900386B42 /* GenericViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GenericViewController.h; sourceTree = "<group>"; };
 		ED4B5C1D1383844900386B42 /* GenericViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GenericViewController.m; sourceTree = "<group>"; };
 		ED4B5C1E1383844900386B42 /* GenericViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = GenericViewController.xib; sourceTree = "<group>"; };
@@ -248,7 +248,7 @@
 				ED4B5C031383761600386B42 /* MainWindow_iPad.xib */,
 				ED4B5C041383761600386B42 /* DetailViewController.h */,
 				ED4B5C051383761600386B42 /* DetailViewController.m */,
-				ED4B5C061383761600386B42 /* DetailView.xib */,
+				ED4B5C061383761600386B42 /* DetailViewController.xib */,
 				ED4B5C1C1383844900386B42 /* GenericViewController.h */,
 				ED4B5C1D1383844900386B42 /* GenericViewController.m */,
 				ED4B5C1E1383844900386B42 /* GenericViewController.xib */,
@@ -349,7 +349,7 @@
 				EDF7CE30134438880012E9DA /* InfoPlist.strings in Resources */,
 				EDF7CE40134438880012E9DA /* MainWindow_iPhone.xib in Resources */,
 				ED4B5C0A1383761600386B42 /* MainWindow_iPad.xib in Resources */,
-				ED4B5C0C1383761600386B42 /* DetailView.xib in Resources */,
+				ED4B5C0C1383761600386B42 /* DetailViewController.xib in Resources */,
 				ED4B5C201383844A00386B42 /* GenericViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
