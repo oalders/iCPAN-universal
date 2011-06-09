@@ -64,6 +64,7 @@
 
 - (void)viewDidAppear:(BOOL)animated
 {
+    NSLog(@"detail view did appear");
     [super viewDidAppear:animated];
 }
 
