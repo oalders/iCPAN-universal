@@ -10,7 +10,8 @@
 
 @class GenericViewController;
 
-@interface DetailViewController : UIViewController <UIPopoverControllerDelegate, UISplitViewControllerDelegate> {
+@interface DetailViewController : UIViewController <UIPopoverControllerDelegate, UISplitViewControllerDelegate,UIWebViewDelegate> {
+    UIWebView *webView;
 
 }
 
@@ -22,6 +23,8 @@
 @property (nonatomic, retain) IBOutlet UILabel *detailDescriptionLabel;
 
 @property (nonatomic, assign) IBOutlet GenericViewController *genericViewController;
+
+@property (nonatomic, retain) IBOutlet UIWebView *webView;
 
 
 @end

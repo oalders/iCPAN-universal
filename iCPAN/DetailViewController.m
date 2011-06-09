@@ -27,6 +27,8 @@
 
 @synthesize genericViewController=_genericViewController;
 
+@synthesize webView;
+
 #pragma mark - Managing the detail item
 
 /*
