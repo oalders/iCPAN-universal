@@ -47,7 +47,7 @@
 					<object class="IBUILabel" id="483876647">
 						<reference key="NSNextResponder" ref="647120888"/>
 						<int key="NSvFlags">298</int>
-						<string key="NSFrame">{{-19, 259}, {728, 21}}</string>
+						<string key="NSFrame">{{0, 44}, {768, 21}}</string>
 						<reference key="NSSuperview" ref="647120888"/>
 						<reference key="NSWindow"/>
 						<reference key="NSNextKeyView" ref="764063107"/>
@@ -58,7 +58,7 @@
 						<bool key="IBUIClipsSubviews">YES</bool>
 						<bool key="IBUIUserInteractionEnabled">NO</bool>
 						<string key="targetRuntimeIdentifier">IBIPadFramework</string>
-						<string key="IBUIText">Pod will be here</string>
+						<string key="IBUIText">Here be POD (shortly)</string>
 						<object class="NSColor" key="IBUITextColor">
 							<int key="NSColorSpace">1</int>
 							<bytes key="NSRGB">MCAwIDAAA</bytes>
@@ -85,10 +85,9 @@
 					<object class="IBUIWebView" id="764063107">
 						<reference key="NSNextResponder" ref="647120888"/>
 						<int key="NSvFlags">292</int>
-						<string key="NSFrame">{{358, 307}, {240, 128}}</string>
+						<string key="NSFrame">{{0, 73}, {768, 931}}</string>
 						<reference key="NSSuperview" ref="647120888"/>
 						<reference key="NSWindow"/>
-						<reference key="NSNextKeyView"/>
 						<object class="NSColor" key="IBUIBackgroundColor">
 							<int key="NSColorSpace">1</int>
 							<bytes key="NSRGB">MSAxIDEAA</bytes>
@@ -180,8 +179,8 @@
 						<object class="NSMutableArray" key="children">
 							<bool key="EncodedWithXMLCoder">YES</bool>
 							<reference ref="410698538"/>
-							<reference ref="483876647"/>
 							<reference ref="764063107"/>
+							<reference ref="483876647"/>
 						</object>
 						<reference key="parent" ref="0"/>
 					</object>
@@ -189,6 +188,7 @@
 						<int key="objectID">45</int>
 						<reference key="object" ref="483876647"/>
 						<reference key="parent" ref="647120888"/>
+						<string key="objectName">Label - Pod will be here</string>
 					</object>
 					<object class="IBObjectRecord">
 						<int key="objectID">63</int>
