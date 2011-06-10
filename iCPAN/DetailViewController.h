@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "Module.h"
 
 @class GenericViewController;
 
@@ -18,13 +19,15 @@
 
 @property (nonatomic, retain) IBOutlet UIToolbar *toolbar;
 
-@property (nonatomic, retain) NSManagedObject *detailItem;
+@property (nonatomic, retain) Module *detailItem;
 
 @property (nonatomic, retain) IBOutlet UILabel *detailDescriptionLabel;
 
 @property (nonatomic, assign) IBOutlet GenericViewController *genericViewController;
 
 @property (nonatomic, retain) IBOutlet UIWebView *webView;
+
+@property (nonatomic, retain) NSString *moduleFile;
 
 
 @end

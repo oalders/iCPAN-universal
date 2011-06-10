@@ -245,7 +245,7 @@
 - (NSString *)cpanpod {
 	//NSLog(@"docs dir %@", [self applicationDocumentsDirectory]);
     //return [self applicationDocumentsDirectory];
-    return [[self docDir] stringByAppendingPathComponent:@"cpanpod"];
+    return [[self docDir] stringByAppendingString:@"/cpanpod/"];
 }
 
 - (NSString *) docDir {

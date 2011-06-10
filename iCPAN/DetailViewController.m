@@ -12,6 +12,8 @@
 
 #import "iCPANAppDelegate.h"
 
+#import "Module.h"
+
 @interface DetailViewController ()
 @property (nonatomic, retain) UIPopoverController *popoverController;
 - (void)configureView;
@@ -29,14 +31,14 @@
 
 @synthesize genericViewController=_genericViewController;
 
-@synthesize webView;
+@synthesize webView, moduleFile;
 
 #pragma mark - Managing the detail item
 
 /*
  When setting the detail item, update the view and dismiss the popover controller if it's showing.
  */
-- (void)setDetailItem:(NSManagedObject *)managedObject
+- (void)setDetailItem:(Module *)managedObject
 {
 	if (_detailItem != managedObject) {
 		[_detailItem release];
@@ -62,16 +64,24 @@
     // Basically, we'll initiate the page load here, but we'll write the page to disk later
     // This method will only ever be called when the user selects a module from the table
     // in the GenericView
-	NSLog(@"looking for: %@", [self.detailItem valueForKey:@"name"]);
-    //iCPANAppDelegate *del = [[UIApplication sharedApplication] delegate];
+    NSString *name = [self.detailItem valueForKey:@"name"];
+	NSLog(@"looking for: %@", name);
+    iCPANAppDelegate *del = [[UIApplication sharedApplication] delegate];
     
-    //NSURL *url = [[del applicationDocumentsDirectory] URLByAppendingPathComponent:@"pod"];
-    //url = [url URLByAppendingPathComponent:[self.detailItem valueForKey:@"name"]];
-    NSURL *url = [[NSURL alloc] initWithString:[self.detailItem valueForKey:@"name"]];
+    name = [name stringByReplacingOccurrencesOfString:@"::" withString:@"-"];
+	NSLog(@"looking for: %@", name);
+    name = [name stringByAppendingString:@".html"];
+	NSLog(@"looking for: %@", name);
+    
+    NSString *fullPath = [[del cpanpod] stringByAppendingString:name];
+	NSLog(@"looking for path: %@", fullPath);
+    
+	NSURL *url = [NSURL fileURLWithPath:fullPath];
 	
+	//NSLog(@"url: %@", url);
 	NSURLRequest *requestObj = [NSURLRequest requestWithURL:url];
 	[webView loadRequest:requestObj];
-    
+        
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -103,15 +113,33 @@
 
 #pragma mark - Loading webView
 
-- (void)viewDidLoad {
-        
+// Implement viewDidLoad to do additional setup after loading the view, typically from a nib.
+- (void)viewDidLoad {		
+	
+	//iCPANAppDelegate *del = [[UIApplication sharedApplication] delegate];
+		
+    //Module *selectedModule = self.detailItem;
+    //NSLog(@"selected %@", self.detailItem);
+    //NSString *podPath = [del.cpanpod stringByAppendingString:[selectedModule path]];
+	//NSURL *url = [NSURL fileURLWithPath:podPath];
+	
+	//NSLog(@"url: %@", url);
+	//NSURLRequest *requestObj = [NSURLRequest requestWithURL:url];
+	//[webView loadRequest:requestObj];
+    
 	// allow users to pinch/zoom.  also scales the page by default
 	webView.scalesPageToFit = YES;
-    
+	
+	//[[NSUserDefaults standardUserDefaults] setValue:appDelegate.selectedModule.name forKey:@"last_module"];
+	
+	// Override point for customization after application launch
+	[super viewDidLoad];
 }
 
 - (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType {
 	
+    NSLog(@"webvew shouldstartloadwithrequest");
+    
 	iCPANAppDelegate *del = [[UIApplication sharedApplication] delegate];
     
 	NSURL *url = [request URL];
@@ -119,19 +147,25 @@
     
 	NSLog(@"relativePath: %@", [url relativePath]);
 	NSLog(@"absoluteString: %@", [url absoluteString]);
-	NSLog(@"baseURL: %@", [url baseURL]);	
+	NSLog(@"baseURL: %@", [url baseURL]);
 	
+    // This will always be the case when coming directly from the GenericViewController
+    if (!path) {
+        path = [url absoluteString];
+	}
+    
 	if ([[url absoluteString] rangeOfString:@"http://"].location == NSNotFound ) {
         
+        NSLog(@"Offline page view ------------------------------------------");
         // This is an offline page view. We need to handle all of the details.
         //
-//		//path = [path stringByReplacingOccurrencesOfString:[[del cpanpod] absoluteString] withString:@""];
+		path = [path stringByReplacingOccurrencesOfString:[del cpanpod] withString:@""];
 		path = [path stringByReplacingOccurrencesOfString:@"-" withString:@"::"];
 		path = [path stringByReplacingOccurrencesOfString:@".html" withString:@""];
 		
 		NSLog(@"module to search for: %@", path);
         // remove next line once we try to follow links in webView
-        path = [url absoluteString];
+        //path = [url absoluteString];
 		
 		NSManagedObjectContext *moc = [del managedObjectContext]; 
 		NSFetchRequest *req = [[NSFetchRequest alloc] init];
@@ -154,9 +188,9 @@
 		if ( results.count > 0 ) {
 			
 			Module *module = [results objectAtIndex:0];
-			//NSLog(@"results for single module search %@", module.name );
+			NSLog(@"results for single module search %@", module.name );
 			
-			//NSLog(@"This is a local URL");
+			NSLog(@"This is a local URL");
 			
 			self.title = module.name;
 			//self.currentlyViewing = module.name;
@@ -176,12 +210,16 @@
             
 			if ( ![[NSFileManager defaultManager] fileExistsAtPath:podPath] ) {
 				NSLog(@"pod path: %@", del.cpanpod);
-				NSLog(@"pod will be written to: %@", podPath);
+				NSLog(@"pod will be written to xxxxxxxx: %@", podPath);
 				NSData* pod_data = [module.pod dataUsingEncoding:NSUTF8StringEncoding];
 				[pod_data writeToFile:podPath atomically:YES];
 			}
+            else {
+                NSLog(@"page exists at %@", podPath);
+            }
 		}
 		else {
+            NSLog(@"module not found: %@", path);
 			self.navigationItem.rightBarButtonItem = nil;
 			self.title = @"404: Page Not Found";
 		}
