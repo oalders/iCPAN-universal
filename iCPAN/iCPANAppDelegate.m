@@ -242,31 +242,43 @@
 	}
 }
 
-- (NSURL *)cpanpod {
-	NSLog(@"docs dir %@", [self applicationDocumentsDirectory]);
-    return [self applicationDocumentsDirectory];
-    //return [[self applicationDocumentsDirectory] URLByAppendingPathComponent:@"cpanpod"];
+- (NSString *)cpanpod {
+	//NSLog(@"docs dir %@", [self applicationDocumentsDirectory]);
+    //return [self applicationDocumentsDirectory];
+    return [[self docDir] stringByAppendingPathComponent:@"cpanpod"];
+}
+
+- (NSString *) docDir {
+    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    NSString *documentsDirectory = [paths objectAtIndex:0];
+    return documentsDirectory;
 }
 
 -(void) createPodFolder {
     NSLog(@"appdelegate about to launch");
     
 	NSFileManager *NSFm= [NSFileManager defaultManager]; 
+    NSError **readError = nil;
+
+    NSArray *files = [NSFm contentsOfDirectoryAtPath:[self docDir] error:readError];
+    NSLog(@"files: %@ error: %@", files, readError);
 	
 	//start clean each time
-    NSLog(@"about to create %@", [[self cpanpod]absoluteString] );
-	if ([NSFm removeItemAtPath: [[self cpanpod]absoluteString] error: NULL]  == YES) {
+    if ([NSFm removeItemAtPath:[self cpanpod] error:readError] ) {
         //NSLog (@"Remove successful");
 	}
 	else {
         NSLog (@"Remove failed");
 	}
     
-    NSError *createError = nil;
+    NSError **createError = nil;
     
-	[NSFm createDirectoryAtPath:[[self cpanpod] absoluteString]withIntermediateDirectories:NO attributes:nil error:createError];
+	[NSFm createDirectoryAtPath:[self cpanpod] withIntermediateDirectories:NO attributes:nil error:createError];
     
     NSLog(@"error: %@", createError);
+    
+    NSArray *mfiles = [NSFm contentsOfDirectoryAtPath:[self docDir] error:readError];
+    NSLog(@"files: %@ error: %@", mfiles, readError);
 
 }
 

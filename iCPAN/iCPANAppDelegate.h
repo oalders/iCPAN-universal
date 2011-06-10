@@ -23,7 +23,8 @@
 - (void) saveContext;
 - (void) createPodFolder;
 - (NSURL *)applicationDocumentsDirectory;
-- (NSURL *)cpanpod;
+- (NSString *) docDir;
+- (NSString *)cpanpod;
 - (NSDictionary *)getBookmarks;
 - (NSArray *)getRecentlyViewed;
 - (BOOL)isBookmarked:(NSString *)moduleName;

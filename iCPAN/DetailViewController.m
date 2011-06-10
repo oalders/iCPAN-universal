@@ -172,7 +172,7 @@
 			NSString *fileName = module.name;
 			fileName = [fileName stringByReplacingOccurrencesOfString:@"::" withString:@"-"];
 			fileName = [fileName stringByAppendingString:@".html"];
-            NSString *podPath = [[[del cpanpod] URLByAppendingPathComponent:fileName] absoluteString];
+            NSString *podPath = [[del cpanpod] stringByAppendingPathComponent:fileName];
             
 			if ( ![[NSFileManager defaultManager] fileExistsAtPath:podPath] ) {
 				NSLog(@"pod path: %@", del.cpanpod);
