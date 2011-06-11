@@ -32,19 +32,12 @@
 // Implement viewDidLoad to do additional setup after loading the view, typically from a nib.
 - (void)viewDidLoad {		
 	
-    iCPANAppDelegate *del = [[UIApplication sharedApplication] delegate];
-	
-	//NSLog(@"looking for: %@", appDelegate.cpanpod);
-	
-    //NSURL *podPath = [[del applicationDocumentsDirectory] cpanpod];
-	
-	//NSURLRequest *requestObj = [NSURLRequest requestWithURL:url];
-	//[masterWebView loadRequest:requestObj];
+    //iCPANAppDelegate *del = [[UIApplication sharedApplication] delegate];
 
 	// allow users to pinch/zoom.  also scales the page by default
 	masterWebView.scalesPageToFit = YES;
 	
-	[[NSUserDefaults standardUserDefaults] setValue:del.selectedModule.name forKey:@"last_module"];
+	//[[NSUserDefaults standardUserDefaults] setValue:del.selectedModule.name forKey:@"last_module"];
 	
 	// Override point for customization after application launch
 	[super viewDidLoad];
@@ -77,7 +70,7 @@
 
 - (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType {
 	
-	iCPANAppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
+	iCPANAppDelegate *del = [[UIApplication sharedApplication] delegate];
     
 	NSURL *url = [request URL];
 	NSString *path = [url relativePath];
@@ -85,16 +78,18 @@
 	//NSLog(@"relativePath: %@", [url relativePath]);
 	//NSLog(@"absoluteString: %@", [url absoluteString]);
 	//NSLog(@"baseURL: %@", [url baseURL]);	
+    
+    NSLog(@"---------------------------------path is %@", path);
 	
 	if ([[url absoluteString] rangeOfString:@"http://"].location == NSNotFound) {
 					
-		path = [path stringByReplacingOccurrencesOfString:[appDelegate cpanpod] withString:@""];
+		path = [path stringByReplacingOccurrencesOfString:[del podDir] withString:@""];
 		path = [path stringByReplacingOccurrencesOfString:@"-" withString:@"::"];
 		path = [path stringByReplacingOccurrencesOfString:@".html" withString:@""];
 		
 		//NSLog(@"module to search for: %@", path);
 		
-		NSManagedObjectContext *moc = [appDelegate managedObjectContext]; 
+		NSManagedObjectContext *moc = [del managedObjectContext]; 
 		NSFetchRequest *req = [[NSFetchRequest alloc] init];
 		[req setEntity:[NSEntityDescription entityForName:@"Module" inManagedObjectContext:moc]];
 		NSPredicate *predicate = [NSPredicate predicateWithFormat:@"name = %@", path];
@@ -121,7 +116,7 @@
 			
 			self.title = module.name;
 			self.currentlyViewing = module.name;
-			NSInteger is_bookmarked = [appDelegate isBookmarked:path];
+			NSInteger is_bookmarked = [del isBookmarked:path];
 			if ( is_bookmarked == 1 ) {
 				[self removeBookmarkButton];
 			}
@@ -129,7 +124,7 @@
 				[self addBookmarkButton];
 			}
 			
-			NSString *podPath = appDelegate.cpanpod;
+			NSString *podPath = del.podDir;
 			NSString *fileName = module.name;
 			fileName = [fileName stringByReplacingOccurrencesOfString:@"::" withString:@"-"];
 			fileName = [fileName stringByAppendingString:@".html"];

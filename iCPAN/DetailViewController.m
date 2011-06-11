@@ -55,12 +55,7 @@
 
 - (void)configureView
 {
-    // Update the user interface for the detail item.
-
-    NSLog(@"detail item %@", self.detailItem);
-    self.detailDescriptionLabel.text = [[self.detailItem valueForKey:@"abstract"] description];
     
-    // More webView loading
     // Basically, we'll initiate the page load here, but we'll write the page to disk later
     // This method will only ever be called when the user selects a module from the table
     // in the GenericView
@@ -71,17 +66,8 @@
     name = [name stringByReplacingOccurrencesOfString:@"::" withString:@"-"];
     name = [name stringByAppendingString:@".html"];
     
-    NSString *fullPath = [[del cpanpod] stringByAppendingString:name];
-	NSLog(@"looking for path: %@", fullPath);
-    
     NSURL *podURL = [[del podURL] URLByAppendingPathComponent:@"/"];
     NSURL *url = [NSURL URLWithString:name relativeToURL:podURL];
-    //NSURL *url = [NSURL URLWithString:fullPath];
-    
-    NSLog(@"^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
-	NSLog(@"relativePath: %@", [url relativePath]);
-	NSLog(@"absoluteString: %@", [url absoluteString]);
-	NSLog(@"baseURL: %@", [url baseURL]);
     
 	NSURLRequest *requestObj = [NSURLRequest requestWithURL:url];
     
@@ -127,9 +113,7 @@
     
 	// allow users to pinch/zoom.  also scales the page by default
 	webView.scalesPageToFit = YES;
-	
-	//[[NSUserDefaults standardUserDefaults] setValue:appDelegate.selectedModule.name forKey:@"last_module"];
-	
+		
 	// Override point for customization after application launch
 	[super viewDidLoad];
 }
@@ -143,25 +127,20 @@
 	NSURL *url = [request URL];
 	NSString *path = [url relativePath];
 
-    
-	NSLog(@"relativePath: %@", [url relativePath]);
-	NSLog(@"absoluteString: %@", [url absoluteString]);
-	NSLog(@"baseURL: %@", [url baseURL]);
+	NSLog(@"path: %@", path );
+
     
 	if ([[url absoluteString] rangeOfString:@"http://"].location == NSNotFound ) {
         
         NSLog(@"Offline page view ------------------------------------------");
         // This is an offline page view. We need to handle all of the details.
         //
-		path = [path stringByReplacingOccurrencesOfString:[del cpanpod] withString:@""];
-		path = [path stringByReplacingOccurrencesOfString:[del docDir] withString:@""];
-		path = [path stringByReplacingOccurrencesOfString:@"/" withString:@""];
+		path = [path stringByReplacingOccurrencesOfString:[del podDir] withString:@""];
+		path = [path stringByReplacingOccurrencesOfString:@"/" withString:@""]; // too many slashes
 		path = [path stringByReplacingOccurrencesOfString:@"-" withString:@"::"];
 		path = [path stringByReplacingOccurrencesOfString:@".html" withString:@""];
 		
 		NSLog(@"module to search for: %@", path);
-        // remove next line once we try to follow links in webView
-        //path = [url absoluteString];
 		
 		NSManagedObjectContext *moc = [del managedObjectContext]; 
 		NSFetchRequest *req = [[NSFetchRequest alloc] init];
@@ -185,9 +164,7 @@
 			
 			Module *module = [results objectAtIndex:0];
 			NSLog(@"results for single module search %@", module.name );
-			
-			NSLog(@"This is a local URL");
-			
+						
 			self.title = module.name;
 			//self.currentlyViewing = module.name;
 			//NSInteger is_bookmarked = [del isBookmarked:path];
@@ -202,15 +179,11 @@
 			NSString *fileName = module.name;
 			fileName = [fileName stringByReplacingOccurrencesOfString:@"::" withString:@"-"];
 			fileName = [fileName stringByAppendingString:@".html"];
-            NSString *podPath = [[del cpanpod] stringByAppendingPathComponent:fileName];
-            NSString *docPath = [[del docDir] stringByAppendingPathComponent:fileName];
+            NSString *podPath = [[del podDir] stringByAppendingPathComponent:fileName];
             
 			if ( ![[NSFileManager defaultManager] fileExistsAtPath:podPath] ) {
-				NSLog(@"pod path: %@", del.cpanpod);
-				NSLog(@"pod will be written to xxxxxxxx: %@", podPath);
 				NSData* pod_data = [module.pod dataUsingEncoding:NSUTF8StringEncoding];
 				[pod_data writeToFile:podPath atomically:YES];
-				[pod_data writeToFile:docPath atomically:YES];
 			}
             else {
                 NSLog(@"page exists at %@", podPath);

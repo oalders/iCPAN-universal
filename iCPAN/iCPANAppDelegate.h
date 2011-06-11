@@ -26,7 +26,7 @@
 - (NSURL *)docURL;
 - (NSURL *)podURL;
 - (NSString *) docDir;
-- (NSString *)cpanpod;
+- (NSString *)podDir;
 - (NSDictionary *)getBookmarks;
 - (NSArray *)getRecentlyViewed;
 - (BOOL)isBookmarked:(NSString *)moduleName;

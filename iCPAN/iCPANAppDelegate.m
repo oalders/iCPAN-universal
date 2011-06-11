@@ -242,7 +242,7 @@
 	}
 }
 
-- (NSString *)cpanpod {
+- (NSString *)podDir {
 	//NSLog(@"docs dir %@", [self applicationDocumentsDirectory]);
     //return [self applicationDocumentsDirectory];
     return [[self docDir] stringByAppendingString:@"/cpanpod/"];
@@ -272,7 +272,7 @@
     NSLog(@"files: %@ error: %@", files, readError);
 	
 	//start clean each time
-    if ([NSFm removeItemAtPath:[self cpanpod] error:readError] ) {
+    if ([NSFm removeItemAtPath:[self podDir] error:readError] ) {
         //NSLog (@"Remove successful");
 	}
 	else {
@@ -281,7 +281,7 @@
     
     NSError **createError = nil;
     
-	[NSFm createDirectoryAtPath:[self cpanpod] withIntermediateDirectories:NO attributes:nil error:createError];
+	[NSFm createDirectoryAtPath:[self podDir] withIntermediateDirectories:NO attributes:nil error:createError];
     
     NSLog(@"error: %@", createError);
     
