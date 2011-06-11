@@ -18,6 +18,10 @@ has 'es' => ( is => 'rw', isa => 'ElasticSearch', lazy_build => 1 );
 has 'index' => ( is => 'rw', default => 'v0' );
 has 'mech' =>
     ( is => 'rw', isa => 'WWW::Mechanize::Cached', lazy_build => 1 );
+has 'pod_server' => ( is => 'rw', default => 'http://localhost:5000/pod/' );
+has 'search_prefix' => ( is => 'rw', isa => 'Str', default => 'DBIx::Class' );
+has 'dist_search_prefix' =>
+    ( is => 'rw', isa => 'Str', default => 'DBIx-Class' );
 has 'server' => ( is => 'rw', default => 'api.beta.metacpan.org:80' );
 
 sub _build_es {
@@ -39,10 +43,12 @@ sub _build_mech {
     my $self  = shift;
     my $cache = CHI->new(
         driver   => 'File',
-        root_dir => '/tmp/mech-example'
+        root_dir => '/tmp/icpan'
     );
 
     my $mech = WWW::Mechanize::Cached->new( autocheck => 0, cache => $cache );
+
+    #my $mech = WWW::Mechanize( autocheck => 0 );
     return $mech;
 
 }
@@ -70,8 +76,8 @@ sub scroll {
 
 sub insert_authors {
 
-    my $self      = shift;
-    my $rs = $self->schema->resultset( 'Zauthor' );
+    my $self = shift;
+    my $rs   = $self->schema->resultset( 'Zauthor' );
     $rs->delete;
 
     my $scroller = $self->es->scrolled_search(
@@ -89,6 +95,7 @@ sub insert_authors {
     my $ent = $self->get_ent( 'Author' );
 
     foreach my $src ( @{$hits} ) {
+
         #say dump $src;
         push @authors,
             {
@@ -103,7 +110,7 @@ sub insert_authors {
     $rs->populate( \@authors );
     $self->update_ent( $rs, $ent );
     return;
-    
+
 }
 
 sub insert_distributions {
@@ -120,7 +127,7 @@ sub insert_distributions {
 
             #match_all => {},
         },
-        filter => { prefix => { distribution => "DBIx" } },
+        filter => { prefix => { distribution => $self->dist_search_prefix } },
         fields => [
             'author', 'distribution', 'abstract', 'version_numified',
             'name',   'date'
@@ -130,7 +137,7 @@ sub insert_distributions {
         explain => 0,
     );
 
-    my $hits = $self->scroll( $scroller, 1000 );
+    my $hits = $self->scroll( $scroller, 500 );
     my @rows = ();
 
     say "found " . scalar @{$hits} . " hits";
@@ -183,7 +190,9 @@ sub insert_modules {
             "and" => [
                 { "exists" => { "field"       => "file.documentation" } },
                 { "term"   => { "file.status" => "latest" } },
-                { "prefix" => { "file.documentation" => "DBIx::" } },
+                {   "prefix" =>
+                        { "file.documentation" => $self->search_prefix }
+                },
             ]
         },
 
@@ -202,7 +211,7 @@ sub insert_modules {
         next if !$src;
         say dump $src;
 
-        my $pod_url = "http://metacpan.org:5001/pod/" . $src->{documentation};
+        my $pod_url = $self->pod_server . $src->{documentation};
         say "GETting: $pod_url";
 
         my $pod
@@ -243,9 +252,9 @@ sub insert_modules {
 
     say dump \@rows;
 
-    $rs->populate( \@rows ) if scalar @rows;    
+    $rs->populate( \@rows ) if scalar @rows;
     $self->update_ent( $rs, $ent );
-    
+
     return;
 
 }
@@ -272,12 +281,12 @@ sub get_ent {
 }
 
 sub update_ent {
-    
+
     my ( $self, $rs, $ent ) = @_;
-    my $last = $rs->search({}, { order_by => 'z_pk DESC'})->first;
+    my $last = $rs->search( {}, { order_by => 'z_pk DESC' } )->first;
     $ent->z_max( $last->id );
     $ent->update;
-    
+
 }
 
 1;

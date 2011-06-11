@@ -64,41 +64,48 @@
     // Basically, we'll initiate the page load here, but we'll write the page to disk later
     // This method will only ever be called when the user selects a module from the table
     // in the GenericView
+
     NSString *name = [self.detailItem valueForKey:@"name"];
-	NSLog(@"looking for: %@", name);
     iCPANAppDelegate *del = [[UIApplication sharedApplication] delegate];
     
     name = [name stringByReplacingOccurrencesOfString:@"::" withString:@"-"];
-	NSLog(@"looking for: %@", name);
     name = [name stringByAppendingString:@".html"];
-	NSLog(@"looking for: %@", name);
     
     NSString *fullPath = [[del cpanpod] stringByAppendingString:name];
 	NSLog(@"looking for path: %@", fullPath);
     
-	NSURL *url = [NSURL fileURLWithPath:fullPath];
-	
-	//NSLog(@"url: %@", url);
+    NSURL *podURL = [[del podURL] URLByAppendingPathComponent:@"/"];
+    NSURL *url = [NSURL URLWithString:name relativeToURL:podURL];
+    //NSURL *url = [NSURL URLWithString:fullPath];
+    
+    NSLog(@"^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
+	NSLog(@"relativePath: %@", [url relativePath]);
+	NSLog(@"absoluteString: %@", [url absoluteString]);
+	NSLog(@"baseURL: %@", [url baseURL]);
+    
 	NSURLRequest *requestObj = [NSURLRequest requestWithURL:url];
+    
+    NSLog(@"about to load webview: ==============================================");
 	[webView loadRequest:requestObj];
         
 }
 
 - (void)viewWillAppear:(BOOL)animated
 {
-    NSLog(@"detail view will appear");
+    //NSLog(@"detail view will appear");
 
     [super viewWillAppear:animated];
 }
 
 - (void)viewDidAppear:(BOOL)animated
 {
-    NSLog(@"detail view did appear");
+    //NSLog(@"detail view did appear");
     [super viewDidAppear:animated];
 }
 
 - (void)viewWillDisappear:(BOOL)animated
 {
+    //NSLog(@"view will disappear");
 	[super viewWillDisappear:animated];
 }
 
@@ -116,16 +123,7 @@
 // Implement viewDidLoad to do additional setup after loading the view, typically from a nib.
 - (void)viewDidLoad {		
 	
-	//iCPANAppDelegate *del = [[UIApplication sharedApplication] delegate];
-		
-    //Module *selectedModule = self.detailItem;
-    //NSLog(@"selected %@", self.detailItem);
-    //NSString *podPath = [del.cpanpod stringByAppendingString:[selectedModule path]];
-	//NSURL *url = [NSURL fileURLWithPath:podPath];
-	
-	//NSLog(@"url: %@", url);
-	//NSURLRequest *requestObj = [NSURLRequest requestWithURL:url];
-	//[webView loadRequest:requestObj];
+    NSLog(@"viewDidLoad");
     
 	// allow users to pinch/zoom.  also scales the page by default
 	webView.scalesPageToFit = YES;
@@ -138,21 +136,17 @@
 
 - (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType {
 	
-    NSLog(@"webvew shouldstartloadwithrequest");
+    NSLog(@"shouldStartLoadWithRequest");
     
 	iCPANAppDelegate *del = [[UIApplication sharedApplication] delegate];
     
 	NSURL *url = [request URL];
 	NSString *path = [url relativePath];
+
     
 	NSLog(@"relativePath: %@", [url relativePath]);
 	NSLog(@"absoluteString: %@", [url absoluteString]);
 	NSLog(@"baseURL: %@", [url baseURL]);
-	
-    // This will always be the case when coming directly from the GenericViewController
-    if (!path) {
-        path = [url absoluteString];
-	}
     
 	if ([[url absoluteString] rangeOfString:@"http://"].location == NSNotFound ) {
         
@@ -160,6 +154,8 @@
         // This is an offline page view. We need to handle all of the details.
         //
 		path = [path stringByReplacingOccurrencesOfString:[del cpanpod] withString:@""];
+		path = [path stringByReplacingOccurrencesOfString:[del docDir] withString:@""];
+		path = [path stringByReplacingOccurrencesOfString:@"/" withString:@""];
 		path = [path stringByReplacingOccurrencesOfString:@"-" withString:@"::"];
 		path = [path stringByReplacingOccurrencesOfString:@".html" withString:@""];
 		
@@ -207,17 +203,20 @@
 			fileName = [fileName stringByReplacingOccurrencesOfString:@"::" withString:@"-"];
 			fileName = [fileName stringByAppendingString:@".html"];
             NSString *podPath = [[del cpanpod] stringByAppendingPathComponent:fileName];
+            NSString *docPath = [[del docDir] stringByAppendingPathComponent:fileName];
             
 			if ( ![[NSFileManager defaultManager] fileExistsAtPath:podPath] ) {
 				NSLog(@"pod path: %@", del.cpanpod);
 				NSLog(@"pod will be written to xxxxxxxx: %@", podPath);
 				NSData* pod_data = [module.pod dataUsingEncoding:NSUTF8StringEncoding];
 				[pod_data writeToFile:podPath atomically:YES];
+				[pod_data writeToFile:docPath atomically:YES];
 			}
             else {
                 NSLog(@"page exists at %@", podPath);
             }
-		}
+        
+        }
 		else {
             NSLog(@"module not found: %@", path);
 			self.navigationItem.rightBarButtonItem = nil;
@@ -231,9 +230,6 @@
 		self.navigationItem.rightBarButtonItem = nil;
 		self.title = [url absoluteString];
 	}
-	
-	//NSArray *dirContents = [[NSFileManager defaultManager] directoryContentsAtPath:del.cpanpod];
-	//NSLog(@"contents %@", dirContents);
     
 	return TRUE;
 }
@@ -259,14 +255,6 @@
     [items release];
     self.popoverController = nil;
 }
-
-/*
- // Implement viewDidLoad to do additional setup after loading the view, typically from a nib.
-- (void)viewDidLoad
-{
-    [super viewDidLoad];
-}
- */
 
 - (void)viewDidUnload
 {

@@ -8,22 +8,25 @@ use Modern::Perl;
 use Scalar::Util qw( reftype );
 use iCPAN;
 
-my $icpan = iCPAN->new;
-$icpan->db_file( 'iCPAN.sqlite' );
-my $schema = $icpan->schema;
-
 my ( $opt, $usage ) = describe_options(
     'update_db %o <some-arg>',
-    [ 'table=s', "table name regex" ],
+    [ 'table=s', "table name (authors|modules|distributions)" ],
     [ 'debug',        "print debugging info" ],
 
     [],
     [ 'help', "print usage message and exit" ],
 );
 
+print($usage->text), exit if $opt->help;
+
+my $icpan = iCPAN->new;
+$icpan->db_file( 'iCPAN.sqlite' );
+my $schema = $icpan->schema;
+
 if ( $opt->{debug} ) {
     say dump( $schema );    
 }
+
 
 my $method =  'insert_' . $opt->{table};
 if ( $opt->{table} eq 'authors' ) {

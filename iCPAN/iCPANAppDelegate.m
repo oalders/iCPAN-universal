@@ -248,6 +248,14 @@
     return [[self docDir] stringByAppendingString:@"/cpanpod/"];
 }
 
+- (NSURL *)docURL {
+    return [self applicationDocumentsDirectory];
+}
+
+- (NSURL *)podURL {
+    return [[self applicationDocumentsDirectory] URLByAppendingPathComponent :@"cpanpod"];
+}
+
 - (NSString *) docDir {
     NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
     NSString *documentsDirectory = [paths objectAtIndex:0];

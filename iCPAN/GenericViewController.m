@@ -23,23 +23,12 @@
     iCPANAppDelegate *del = [[UIApplication sharedApplication] delegate];
     NSManagedObjectContext *context = del.managedObjectContext;
     
-    //NSManagedObject *author = [NSEntityDescription
-    //                           insertNewObjectForEntityForName:@"Author" 
-    //                           inManagedObjectContext:context];
-    //[author setValue:@"OALDERS" forKey:@"pauseid"];
-    //[author setValue:@"Olaf Alders" forKey:@"name"];
-    //[author setValue:@"olaf@wundersolutions.com" forKey:@"email"];
-    
     NSError *error;
-    //if (![context save:&error]) {
-    //    NSLog(@"Whoops, couldn't save: %@ %@", [error localizedDescription], error);
-    //}
-    //NSLog(@"dummy data inserted");
     
     NSFetchRequest *request = [[NSFetchRequest alloc] init];
     NSEntityDescription *entity = [NSEntityDescription entityForName:@"Module" inManagedObjectContext:context];
     [request setEntity:entity];
-    [request setFetchLimit:50];
+    [request setFetchLimit:500];
     
     NSSortDescriptor *sort = [[NSSortDescriptor alloc] initWithKey:@"name" ascending:YES selector:@selector(caseInsensitiveCompare:)];
     [request setSortDescriptors:[NSArray arrayWithObject:sort]];
@@ -55,9 +44,7 @@
     self.searchResults = mutableFetchResults;
     
     [request release];
-    
-    NSLog(@"tables should have been created");
-    
+        
 }
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -128,17 +115,15 @@
     }
     
     // Configure the cell.
-    //NSLog(@"cell %@", [[self.searchResults objectAtIndex:indexPath.row] name]);
     cell.textLabel.text = [[self.searchResults objectAtIndex:indexPath.row] name];
     cell.textLabel.font = [UIFont systemFontOfSize:16];
     return cell;
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    NSLog(@"cell was tapped");
     // Set the detail item in the detail view controller.
-    NSManagedObject *selectedObject = [self.searchResults objectAtIndex:indexPath.row];
-    detailViewController.detailItem = selectedObject;
+    Module *module = [self.searchResults objectAtIndex:indexPath.row];
+    detailViewController.detailItem = module;
 }
 
 @end
