@@ -31,7 +31,7 @@
 
 @synthesize genericViewController=_genericViewController;
 
-@synthesize webView, moduleFile;
+@synthesize webView, moduleFile, backButton, forwardButton;
 
 #pragma mark - Managing the detail item
 
@@ -206,6 +206,18 @@
     
 	return TRUE;
 }
+
+- (void)webViewDidStartLoad:(UIWebView *)mwebView {
+    backButton.enabled = (webView.canGoBack);
+    forwardButton.enabled = (webView.canGoForward);
+}
+
+
+- (void)webViewDidFinishLoad:(UIWebView *)mwebView {
+    backButton.enabled = (webView.canGoBack);
+    forwardButton.enabled = (webView.canGoForward);
+}
+
 
 #pragma mark - Split view support
 

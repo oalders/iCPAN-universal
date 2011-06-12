@@ -13,7 +13,8 @@
 
 @interface DetailViewController : UIViewController <UIPopoverControllerDelegate, UISplitViewControllerDelegate,UIWebViewDelegate> {
     UIWebView *webView;
-
+    UIBarButtonItem *backButton;
+    UIBarButtonItem *forwardButton;
 }
 
 
@@ -28,6 +29,9 @@
 @property (nonatomic, retain) IBOutlet UIWebView *webView;
 
 @property (nonatomic, retain) NSString *moduleFile;
+
+@property (nonatomic, retain) IBOutlet UIBarButtonItem *backButton;
+@property (nonatomic, retain) IBOutlet UIBarButtonItem *forwardButton;
 
 
 @end
