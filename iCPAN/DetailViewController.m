@@ -79,6 +79,8 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     //NSLog(@"detail view will appear");
+    backButton.enabled = FALSE;
+    forwardButton.enabled = FALSE;
 
     [super viewWillAppear:animated];
 }
