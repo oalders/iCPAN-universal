@@ -31,7 +31,7 @@
 
 @synthesize genericViewController=_genericViewController;
 
-@synthesize webView, moduleFile, backButton, forwardButton;
+@synthesize webView, moduleFile, backButton, forwardButton, refreshButton, stopButton;
 
 #pragma mark - Managing the detail item
 
@@ -81,6 +81,8 @@
     //NSLog(@"detail view will appear");
     backButton.enabled = FALSE;
     forwardButton.enabled = FALSE;
+    refreshButton.enabled = FALSE;
+    stopButton.enabled = FALSE;
 
     [super viewWillAppear:animated];
 }
@@ -197,14 +199,17 @@
 			self.navigationItem.rightBarButtonItem = nil;
 			self.title = @"404: Page Not Found";
 		}
-		
+        refreshButton.enabled = FALSE;
+        stopButton.enabled = FALSE;
 		[req release];
 	}
 	else {
 		// we are now online
 		self.navigationItem.rightBarButtonItem = nil;
 		self.title = [url absoluteString];
-	}
+        refreshButton.enabled = TRUE;
+        stopButton.enabled = TRUE;
+    }
     
 	return TRUE;
 }

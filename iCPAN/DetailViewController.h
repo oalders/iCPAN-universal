@@ -15,6 +15,8 @@
     UIWebView *webView;
     UIBarButtonItem *backButton;
     UIBarButtonItem *forwardButton;
+    UIBarButtonItem *refreshButton;
+    UIBarButtonItem *stopButton;
 }
 
 
@@ -32,6 +34,8 @@
 
 @property (nonatomic, retain) IBOutlet UIBarButtonItem *backButton;
 @property (nonatomic, retain) IBOutlet UIBarButtonItem *forwardButton;
+@property (nonatomic, retain) IBOutlet UIBarButtonItem *refreshButton;
+@property (nonatomic, retain) IBOutlet UIBarButtonItem *stopButton;
 
 
 @end
