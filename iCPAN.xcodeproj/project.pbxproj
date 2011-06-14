@@ -79,6 +79,7 @@
 		ED706AB513A714BE00AAE86E /* GRMustacheTemplateLoader_protected.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GRMustacheTemplateLoader_protected.h; sourceTree = "<group>"; };
 		ED706AB613A714BE00AAE86E /* GRMustacheVersion.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GRMustacheVersion.h; sourceTree = "<group>"; };
 		ED706AB813A714D200AAE86E /* libGRMustache1-ios4.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libGRMustache1-ios4.a"; path = "inc/GRMustache/lib/libGRMustache1-ios4.a"; sourceTree = SOURCE_ROOT; };
+		ED706ABA13A718DA00AAE86E /* GRMustache_context.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GRMustache_context.h; path = inc/GRMustache/Classes/GRMustache_context.h; sourceTree = SOURCE_ROOT; };
 		ED725D7C139DDF370006EFA3 /* ModuleViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ModuleViewController.h; sourceTree = "<group>"; };
 		ED725D7D139DDF370006EFA3 /* ModuleViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ModuleViewController.m; sourceTree = "<group>"; };
 		ED725D80139DE5C50006EFA3 /* Author.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Author.h; path = Model/Author.h; sourceTree = "<group>"; };
@@ -159,6 +160,7 @@
 		ED706AAA13A714BE00AAE86E /* GRMustache */ = {
 			isa = PBXGroup;
 			children = (
+				ED706ABA13A718DA00AAE86E /* GRMustache_context.h */,
 				ED706AB813A714D200AAE86E /* libGRMustache1-ios4.a */,
 				ED706AAB13A714BE00AAE86E /* GRBoolean.h */,
 				ED706AAC13A714BE00AAE86E /* GRMustache.h */,
@@ -539,7 +541,7 @@
 					"$(inherited)",
 					"\"$(SRCROOT)/inc/GRMustache/lib\"",
 				);
-				"OTHER_LDFLAGS[arch=*]" = "-all_load";
+				"OTHER_LDFLAGS[sdk=iphonesimulator*][arch=*]" = "-all_load";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
 			};
@@ -557,7 +559,7 @@
 					"$(inherited)",
 					"\"$(SRCROOT)/inc/GRMustache/lib\"",
 				);
-				"OTHER_LDFLAGS[arch=*]" = "-all_load";
+				"OTHER_LDFLAGS[sdk=iphonesimulator*][arch=*]" = "-all_load";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				VALIDATE_PRODUCT = YES;
 				WRAPPER_EXTENSION = app;
