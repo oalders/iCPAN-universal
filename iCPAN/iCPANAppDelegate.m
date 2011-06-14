@@ -268,7 +268,9 @@
 	NSFileManager *NSFm= [NSFileManager defaultManager]; 
     NSError **readError = nil;
 
-    NSArray *files = [NSFm contentsOfDirectoryAtPath:[self docDir] error:readError];
+    NSString *appFolderPath = [[NSBundle mainBundle] resourcePath];
+
+    NSArray *files = [NSFm contentsOfDirectoryAtPath:appFolderPath error:readError];
     NSLog(@"files: %@ error: %@", files, readError);
 	
 	//start clean each time
@@ -288,18 +290,22 @@
     NSArray *mfiles = [NSFm contentsOfDirectoryAtPath:[self docDir] error:readError];
     NSLog(@"files: %@ error: %@", mfiles, readError);
     
-	NSString *bundlePath = [[NSBundle mainBundle] bundlePath];
+	NSString *bundlePath = [[NSBundle mainBundle] resourcePath];
 	bundlePath = [bundlePath stringByAppendingString:@"/"];
 	NSError *error = nil;
+    
+    NSLog(@"resource path: %@", [[NSBundle mainBundle] resourcePath]);
 	
 	// Not sure of the best way to handle this, but it seems like we can't reliably predict where the cpanpod
     // folder will be, so we'll just copy over some resource files when needed
-	NSArray *dirContents = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:bundlePath error:createError];
+	NSArray *dirContents = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:[[NSBundle mainBundle] resourcePath] error:createError];
+    
+    NSLog(@"dircontents %@", dirContents);
 	NSArray *css = [dirContents filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self ENDSWITH 's'"]];
+    NSLog(@"css %@", css);
     NSLog(@"error %@", createError);
-	NSEnumerator *e = [css objectEnumerator];
 	id file;
-	while (file == [e nextObject]) {
+    for (file in css ) {
 		
 		NSString *src = [bundlePath stringByAppendingString:file];
 		NSString *dest = [self.podDir stringByAppendingString:file];

@@ -14,16 +14,16 @@
 		ED4B5C1F1383844A00386B42 /* GenericViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = ED4B5C1D1383844900386B42 /* GenericViewController.m */; };
 		ED4B5C201383844A00386B42 /* GenericViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = ED4B5C1E1383844900386B42 /* GenericViewController.xib */; };
 		ED706AB913A714D200AAE86E /* libGRMustache1-ios4.a in Frameworks */ = {isa = PBXBuildFile; fileRef = ED706AB813A714D200AAE86E /* libGRMustache1-ios4.a */; };
-		ED706ABC13A71C7200AAE86E /* template.html in Resources */ = {isa = PBXBuildFile; fileRef = ED706ABB13A71C7200AAE86E /* template.html */; };
-		ED706AC713A71C9B00AAE86E /* shThemeDefault.css in Resources */ = {isa = PBXBuildFile; fileRef = ED706ABE13A71C9B00AAE86E /* shThemeDefault.css */; };
-		ED706AC813A71C9B00AAE86E /* shBrushPerl.js in Resources */ = {isa = PBXBuildFile; fileRef = ED706ABF13A71C9B00AAE86E /* shBrushPerl.js */; };
-		ED706AC913A71C9B00AAE86E /* shCore.js in Resources */ = {isa = PBXBuildFile; fileRef = ED706AC013A71C9B00AAE86E /* shCore.js */; };
-		ED706ACA13A71C9B00AAE86E /* shBrushJScript.js in Resources */ = {isa = PBXBuildFile; fileRef = ED706AC113A71C9B00AAE86E /* shBrushJScript.js */; };
-		ED706ACB13A71C9B00AAE86E /* shCore.css in Resources */ = {isa = PBXBuildFile; fileRef = ED706AC213A71C9B00AAE86E /* shCore.css */; };
-		ED706ACC13A71C9B00AAE86E /* shThemeEmacs.css in Resources */ = {isa = PBXBuildFile; fileRef = ED706AC313A71C9B00AAE86E /* shThemeEmacs.css */; };
-		ED706ACD13A71C9B00AAE86E /* style.css in Resources */ = {isa = PBXBuildFile; fileRef = ED706AC413A71C9B00AAE86E /* style.css */; };
-		ED706ACE13A71C9B00AAE86E /* iCPAN.js in Resources */ = {isa = PBXBuildFile; fileRef = ED706AC513A71C9B00AAE86E /* iCPAN.js */; };
-		ED706AD213A7204B00AAE86E /* jquery.min.js in Resources */ = {isa = PBXBuildFile; fileRef = ED706ABD13A71C9B00AAE86E /* jquery.min.js */; };
+		ED706ADE13A7280800AAE86E /* template.html in Resources */ = {isa = PBXBuildFile; fileRef = ED706ADD13A7280800AAE86E /* template.html */; };
+		ED706AE413A7283700AAE86E /* iCPAN.js in Resources */ = {isa = PBXBuildFile; fileRef = ED706ADF13A7283700AAE86E /* iCPAN.js */; };
+		ED706AE513A7283700AAE86E /* jquery.min.js in Resources */ = {isa = PBXBuildFile; fileRef = ED706AE013A7283700AAE86E /* jquery.min.js */; };
+		ED706AE613A7283700AAE86E /* shBrushJScript.js in Resources */ = {isa = PBXBuildFile; fileRef = ED706AE113A7283700AAE86E /* shBrushJScript.js */; };
+		ED706AE713A7283700AAE86E /* shBrushPerl.js in Resources */ = {isa = PBXBuildFile; fileRef = ED706AE213A7283700AAE86E /* shBrushPerl.js */; };
+		ED706AE813A7283700AAE86E /* shCore.js in Resources */ = {isa = PBXBuildFile; fileRef = ED706AE313A7283700AAE86E /* shCore.js */; };
+		ED706AED13A7285B00AAE86E /* shCore.css in Resources */ = {isa = PBXBuildFile; fileRef = ED706AE913A7285B00AAE86E /* shCore.css */; };
+		ED706AEE13A7285B00AAE86E /* shThemeDefault.css in Resources */ = {isa = PBXBuildFile; fileRef = ED706AEA13A7285B00AAE86E /* shThemeDefault.css */; };
+		ED706AEF13A7285B00AAE86E /* shThemeEmacs.css in Resources */ = {isa = PBXBuildFile; fileRef = ED706AEB13A7285B00AAE86E /* shThemeEmacs.css */; };
+		ED706AF013A7285B00AAE86E /* style.css in Resources */ = {isa = PBXBuildFile; fileRef = ED706AEC13A7285B00AAE86E /* style.css */; };
 		ED725D7E139DDF370006EFA3 /* ModuleViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = ED725D7D139DDF370006EFA3 /* ModuleViewController.m */; };
 		ED725D82139DE5C60006EFA3 /* Author.m in Sources */ = {isa = PBXBuildFile; fileRef = ED725D81139DE5C60006EFA3 /* Author.m */; };
 		ED725D85139DE5C60006EFA3 /* Module.m in Sources */ = {isa = PBXBuildFile; fileRef = ED725D84139DE5C60006EFA3 /* Module.m */; };
@@ -90,16 +90,16 @@
 		ED706AB613A714BE00AAE86E /* GRMustacheVersion.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GRMustacheVersion.h; sourceTree = "<group>"; };
 		ED706AB813A714D200AAE86E /* libGRMustache1-ios4.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libGRMustache1-ios4.a"; path = "inc/GRMustache/lib/libGRMustache1-ios4.a"; sourceTree = SOURCE_ROOT; };
 		ED706ABA13A718DA00AAE86E /* GRMustache_context.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GRMustache_context.h; path = inc/GRMustache/Classes/GRMustache_context.h; sourceTree = SOURCE_ROOT; };
-		ED706ABB13A71C7200AAE86E /* template.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; name = template.html; path = ../../../../../Desktop/template.html; sourceTree = "<group>"; };
-		ED706ABD13A71C9B00AAE86E /* jquery.min.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = jquery.min.js; sourceTree = "<group>"; };
-		ED706ABE13A71C9B00AAE86E /* shThemeDefault.css */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.css; path = shThemeDefault.css; sourceTree = "<group>"; };
-		ED706ABF13A71C9B00AAE86E /* shBrushPerl.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = shBrushPerl.js; sourceTree = "<group>"; };
-		ED706AC013A71C9B00AAE86E /* shCore.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = shCore.js; sourceTree = "<group>"; };
-		ED706AC113A71C9B00AAE86E /* shBrushJScript.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = shBrushJScript.js; sourceTree = "<group>"; };
-		ED706AC213A71C9B00AAE86E /* shCore.css */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.css; path = shCore.css; sourceTree = "<group>"; };
-		ED706AC313A71C9B00AAE86E /* shThemeEmacs.css */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.css; path = shThemeEmacs.css; sourceTree = "<group>"; };
-		ED706AC413A71C9B00AAE86E /* style.css */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.css; path = style.css; sourceTree = "<group>"; };
-		ED706AC513A71C9B00AAE86E /* iCPAN.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = iCPAN.js; sourceTree = "<group>"; };
+		ED706ADD13A7280800AAE86E /* template.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = template.html; sourceTree = "<group>"; };
+		ED706ADF13A7283700AAE86E /* iCPAN.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = iCPAN.js; sourceTree = "<group>"; };
+		ED706AE013A7283700AAE86E /* jquery.min.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = jquery.min.js; sourceTree = "<group>"; };
+		ED706AE113A7283700AAE86E /* shBrushJScript.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = shBrushJScript.js; sourceTree = "<group>"; };
+		ED706AE213A7283700AAE86E /* shBrushPerl.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = shBrushPerl.js; sourceTree = "<group>"; };
+		ED706AE313A7283700AAE86E /* shCore.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = shCore.js; sourceTree = "<group>"; };
+		ED706AE913A7285B00AAE86E /* shCore.css */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.css; path = shCore.css; sourceTree = "<group>"; };
+		ED706AEA13A7285B00AAE86E /* shThemeDefault.css */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.css; path = shThemeDefault.css; sourceTree = "<group>"; };
+		ED706AEB13A7285B00AAE86E /* shThemeEmacs.css */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.css; path = shThemeEmacs.css; sourceTree = "<group>"; };
+		ED706AEC13A7285B00AAE86E /* style.css */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.css; path = style.css; sourceTree = "<group>"; };
 		ED725D7C139DDF370006EFA3 /* ModuleViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ModuleViewController.h; sourceTree = "<group>"; };
 		ED725D7D139DDF370006EFA3 /* ModuleViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ModuleViewController.m; sourceTree = "<group>"; };
 		ED725D80139DE5C50006EFA3 /* Author.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Author.h; path = Model/Author.h; sourceTree = "<group>"; };
@@ -199,6 +199,54 @@
 			path = inc/GRMustache/include;
 			sourceTree = SOURCE_ROOT;
 		};
+		ED706AD813A7272C00AAE86E /* Classes */ = {
+			isa = PBXGroup;
+			children = (
+				ED706AAA13A714BE00AAE86E /* GRMustache */,
+				EDEC878613477D3F00F29F4C /* JSON */,
+			);
+			name = Classes;
+			sourceTree = "<group>";
+		};
+		ED706ADA13A7275500AAE86E /* Reference */ = {
+			isa = PBXGroup;
+			children = (
+				ED725D7C139DDF370006EFA3 /* ModuleViewController.h */,
+				ED725D7D139DDF370006EFA3 /* ModuleViewController.m */,
+			);
+			name = Reference;
+			sourceTree = "<group>";
+		};
+		ED706ADB13A7277400AAE86E /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				ED725D86139DE5C60006EFA3 /* Distribution.h */,
+				ED725D87139DE5C60006EFA3 /* Distribution.m */,
+				ED725D83139DE5C60006EFA3 /* Module.h */,
+				ED725D84139DE5C60006EFA3 /* Module.m */,
+				ED725D80139DE5C50006EFA3 /* Author.h */,
+				ED725D81139DE5C60006EFA3 /* Author.m */,
+			);
+			name = Model;
+			sourceTree = "<group>";
+		};
+		ED706ADC13A727C400AAE86E /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				ED706AE913A7285B00AAE86E /* shCore.css */,
+				ED706AEA13A7285B00AAE86E /* shThemeDefault.css */,
+				ED706AEB13A7285B00AAE86E /* shThemeEmacs.css */,
+				ED706AEC13A7285B00AAE86E /* style.css */,
+				ED706ADF13A7283700AAE86E /* iCPAN.js */,
+				ED706AE013A7283700AAE86E /* jquery.min.js */,
+				ED706AE113A7283700AAE86E /* shBrushJScript.js */,
+				ED706AE213A7283700AAE86E /* shBrushPerl.js */,
+				ED706AE313A7283700AAE86E /* shCore.js */,
+				ED706ADD13A7280800AAE86E /* template.html */,
+			);
+			name = Resources;
+			sourceTree = "<group>";
+		};
 		EDEC878613477D3F00F29F4C /* JSON */ = {
 			isa = PBXGroup;
 			children = (
@@ -258,21 +306,15 @@
 		EDF7CE2B134438880012E9DA /* iCPAN */ = {
 			isa = PBXGroup;
 			children = (
-				ED706AAA13A714BE00AAE86E /* GRMustache */,
-				EDEC878613477D3F00F29F4C /* JSON */,
 				EDF7CE34134438880012E9DA /* iCPANAppDelegate.h */,
 				EDF7CE35134438880012E9DA /* iCPANAppDelegate.m */,
+				ED706ADB13A7277400AAE86E /* Model */,
+				ED706ADA13A7275500AAE86E /* Reference */,
+				ED706AD813A7272C00AAE86E /* Classes */,
 				EDF7CE37134438880012E9DA /* iCPAN.xcdatamodeld */,
-				ED725D7C139DDF370006EFA3 /* ModuleViewController.h */,
-				ED725D7D139DDF370006EFA3 /* ModuleViewController.m */,
-				ED725D86139DE5C60006EFA3 /* Distribution.h */,
-				ED725D87139DE5C60006EFA3 /* Distribution.m */,
-				ED725D83139DE5C60006EFA3 /* Module.h */,
-				ED725D84139DE5C60006EFA3 /* Module.m */,
-				ED725D80139DE5C50006EFA3 /* Author.h */,
-				ED725D81139DE5C60006EFA3 /* Author.m */,
 				EDF7CE3A134438880012E9DA /* iPhone */,
 				EDF7CE41134438880012E9DA /* iPad */,
+				ED706ADC13A727C400AAE86E /* Resources */,
 				EDF7CE2C134438880012E9DA /* Supporting Files */,
 			);
 			path = iCPAN;
@@ -281,16 +323,6 @@
 		EDF7CE2C134438880012E9DA /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
-				ED706ABD13A71C9B00AAE86E /* jquery.min.js */,
-				ED706ABE13A71C9B00AAE86E /* shThemeDefault.css */,
-				ED706ABF13A71C9B00AAE86E /* shBrushPerl.js */,
-				ED706AC013A71C9B00AAE86E /* shCore.js */,
-				ED706AC113A71C9B00AAE86E /* shBrushJScript.js */,
-				ED706AC213A71C9B00AAE86E /* shCore.css */,
-				ED706AC313A71C9B00AAE86E /* shThemeEmacs.css */,
-				ED706AC413A71C9B00AAE86E /* style.css */,
-				ED706AC513A71C9B00AAE86E /* iCPAN.js */,
-				ED706ABB13A71C7200AAE86E /* template.html */,
 				EDF7CE2D134438880012E9DA /* iCPAN-Info.plist */,
 				EDF7CE2E134438880012E9DA /* InfoPlist.strings */,
 				EDF7CE31134438880012E9DA /* iCPAN-Prefix.pch */,
@@ -416,20 +448,20 @@
 			buildActionMask = 2147483647;
 			files = (
 				EDF7CE30134438880012E9DA /* InfoPlist.strings in Resources */,
-				ED706AC813A71C9B00AAE86E /* shBrushPerl.js in Resources */,
-				ED706AC913A71C9B00AAE86E /* shCore.js in Resources */,
-				ED706ACA13A71C9B00AAE86E /* shBrushJScript.js in Resources */,
-				ED706ACE13A71C9B00AAE86E /* iCPAN.js in Resources */,
-				ED706AD213A7204B00AAE86E /* jquery.min.js in Resources */,
 				EDF7CE40134438880012E9DA /* MainWindow_iPhone.xib in Resources */,
 				ED4B5C0A1383761600386B42 /* MainWindow_iPad.xib in Resources */,
 				ED4B5C0C1383761600386B42 /* DetailViewController.xib in Resources */,
 				ED4B5C201383844A00386B42 /* GenericViewController.xib in Resources */,
-				ED706ABC13A71C7200AAE86E /* template.html in Resources */,
-				ED706AC713A71C9B00AAE86E /* shThemeDefault.css in Resources */,
-				ED706ACB13A71C9B00AAE86E /* shCore.css in Resources */,
-				ED706ACC13A71C9B00AAE86E /* shThemeEmacs.css in Resources */,
-				ED706ACD13A71C9B00AAE86E /* style.css in Resources */,
+				ED706ADE13A7280800AAE86E /* template.html in Resources */,
+				ED706AED13A7285B00AAE86E /* shCore.css in Resources */,
+				ED706AEE13A7285B00AAE86E /* shThemeDefault.css in Resources */,
+				ED706AEF13A7285B00AAE86E /* shThemeEmacs.css in Resources */,
+				ED706AF013A7285B00AAE86E /* style.css in Resources */,
+				ED706AE413A7283700AAE86E /* iCPAN.js in Resources */,
+				ED706AE513A7283700AAE86E /* jquery.min.js in Resources */,
+				ED706AE613A7283700AAE86E /* shBrushJScript.js in Resources */,
+				ED706AE713A7283700AAE86E /* shBrushPerl.js in Resources */,
+				ED706AE813A7283700AAE86E /* shCore.js in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
