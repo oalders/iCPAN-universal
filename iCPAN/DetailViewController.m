@@ -188,9 +188,13 @@
             NSString *podPath = [[del podDir] stringByAppendingPathComponent:fileName];
             
 			if ( ![[NSFileManager defaultManager] fileExistsAtPath:podPath] ) {
-                NSString *test = [GRMustacheTemplate renderObject:module fromString:@"Hi {{{pod}}}" error:nil];
+                
+                NSString *tmplFile = [[[NSBundle mainBundle] resourcePath] stringByAppendingPathComponent:@"template.html"];
+                NSString *text = [GRMustacheTemplate renderObject:module fromContentsOfFile: tmplFile error:nil];
+                //NSString *test = [GRMustacheTemplate renderObject:module fromString:@"Hi {{{pod}}}" error:nil];
                 //NSLog(@"testing pod: %@", test);
-                [test writeToFile:podPath atomically:YES encoding:NSUTF8StringEncoding error:nil];
+                [text writeToFile:podPath atomically:YES encoding:NSUTF8StringEncoding error:nil];
+                NSLog(@"template file %@", tmplFile);
 			}
             else {
                 NSLog(@"page exists at %@", podPath);
