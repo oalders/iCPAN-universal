@@ -189,7 +189,7 @@
             
 			if ( ![[NSFileManager defaultManager] fileExistsAtPath:podPath] ) {
                 NSString *test = [GRMustacheTemplate renderObject:module fromString:@"Hi {{{pod}}}" error:nil];
-                NSLog(@"testing pod: %@", test);
+                //NSLog(@"testing pod: %@", test);
                 [test writeToFile:podPath atomically:YES encoding:NSUTF8StringEncoding error:nil];
 			}
             else {

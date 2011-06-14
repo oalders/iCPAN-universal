@@ -287,6 +287,30 @@
     
     NSArray *mfiles = [NSFm contentsOfDirectoryAtPath:[self docDir] error:readError];
     NSLog(@"files: %@ error: %@", mfiles, readError);
+    
+	NSString *bundlePath = [[NSBundle mainBundle] bundlePath];
+	bundlePath = [bundlePath stringByAppendingString:@"/"];
+	NSError *error = nil;
+	
+	// Not sure of the best way to handle this, but it seems like we can't reliably predict where the cpanpod
+    // folder will be, so we'll just copy over some resource files when needed
+	NSArray *dirContents = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:bundlePath error:createError];
+	NSArray *css = [dirContents filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self ENDSWITH 's'"]];
+    NSLog(@"error %@", createError);
+	NSEnumerator *e = [css objectEnumerator];
+	id file;
+	while (file == [e nextObject]) {
+		
+		NSString *src = [bundlePath stringByAppendingString:file];
+		NSString *dest = [self.podDir stringByAppendingString:file];
+        NSLog(@"src: %@", file);
+        
+		if ( [[NSFileManager defaultManager] isReadableFileAtPath:src] )
+			[[NSFileManager defaultManager] copyItemAtPath:src toPath:dest error:&error];
+	}
+    
+    NSArray *afterFiles = [NSFm contentsOfDirectoryAtPath:[self docDir] error:readError];
+    NSLog(@"after files: %@ error: %@", afterFiles, readError);
 
 }
 
