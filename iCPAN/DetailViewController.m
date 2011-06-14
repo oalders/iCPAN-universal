@@ -14,6 +14,8 @@
 
 #import "Module.h"
 
+#import "GRMustache.h"
+
 @interface DetailViewController ()
 @property (nonatomic, retain) UIPopoverController *popoverController;
 - (void)configureView;
@@ -187,6 +189,9 @@
             
 			if ( ![[NSFileManager defaultManager] fileExistsAtPath:podPath] ) {
 				NSData* pod_data = [module.pod dataUsingEncoding:NSUTF8StringEncoding];
+                
+                NSString *test = [GRMustacheTemplate renderObject:module fromString:@"Hi {{pod}}" error:nil];
+                NSLog(@"testing pod: %s", test);
 				[pod_data writeToFile:podPath atomically:YES];
 			}
             else {
