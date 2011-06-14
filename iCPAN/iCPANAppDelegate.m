@@ -263,60 +263,46 @@
 }
 
 -(void) createPodFolder {
-    NSLog(@"appdelegate about to launch");
     
-	NSFileManager *NSFm= [NSFileManager defaultManager]; 
+	NSFileManager *FM= [NSFileManager defaultManager]; 
+    NSError **createError = nil;
+	NSError *error = nil;
     NSError **readError = nil;
-
-    NSString *appFolderPath = [[NSBundle mainBundle] resourcePath];
-
-    NSArray *files = [NSFm contentsOfDirectoryAtPath:appFolderPath error:readError];
-    NSLog(@"files: %@ error: %@", files, readError);
 	
 	//start clean each time
-    if ([NSFm removeItemAtPath:[self podDir] error:readError] ) {
+    if ([FM removeItemAtPath:self.podDir error:readError] ) {
         //NSLog (@"Remove successful");
 	}
 	else {
         NSLog (@"Remove failed");
 	}
-    
-    NSError **createError = nil;
-    
-	[NSFm createDirectoryAtPath:[self podDir] withIntermediateDirectories:NO attributes:nil error:createError];
+        
+	[FM createDirectoryAtPath:self.podDir withIntermediateDirectories:NO attributes:nil error:createError];
     
     NSLog(@"error: %@", createError);
     
-    NSArray *mfiles = [NSFm contentsOfDirectoryAtPath:[self docDir] error:readError];
-    NSLog(@"files: %@ error: %@", mfiles, readError);
+	NSString *resourcePath = [[[NSBundle mainBundle] resourcePath] stringByAppendingString:@"/"];
     
-	NSString *bundlePath = [[NSBundle mainBundle] resourcePath];
-	bundlePath = [bundlePath stringByAppendingString:@"/"];
-	NSError *error = nil;
-    
-    NSLog(@"resource path: %@", [[NSBundle mainBundle] resourcePath]);
+    NSLog(@"resource path: %@", resourcePath);
 	
-	// Not sure of the best way to handle this, but it seems like we can't reliably predict where the cpanpod
-    // folder will be, so we'll just copy over some resource files when needed
-	NSArray *dirContents = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:[[NSBundle mainBundle] resourcePath] error:createError];
+	NSArray *dirContents = [FM contentsOfDirectoryAtPath:resourcePath error:createError];
     
     NSLog(@"dircontents %@", dirContents);
 	NSArray *css = [dirContents filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self ENDSWITH 's'"]];
-    NSLog(@"css %@", css);
-    NSLog(@"error %@", createError);
+
 	id file;
     for (file in css ) {
 		
-		NSString *src = [bundlePath stringByAppendingString:file];
+		NSString *src = [resourcePath stringByAppendingString:file];
 		NSString *dest = [self.podDir stringByAppendingString:file];
         NSLog(@"src: %@", file);
         
-		if ( [[NSFileManager defaultManager] isReadableFileAtPath:src] )
-			[[NSFileManager defaultManager] copyItemAtPath:src toPath:dest error:&error];
+		if ( [FM isReadableFileAtPath:src] )
+			[FM copyItemAtPath:src toPath:dest error:&error];
 	}
     
-    NSArray *afterFiles = [NSFm contentsOfDirectoryAtPath:[self docDir] error:readError];
-    NSLog(@"after files: %@ error: %@", afterFiles, readError);
+    //NSArray *afterFiles = [FM contentsOfDirectoryAtPath:[self docDir] error:readError];
+    //NSLog(@"after files: %@ error: %@", afterFiles, readError);
 
 }
 
