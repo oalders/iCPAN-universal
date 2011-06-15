@@ -17,36 +17,6 @@
 @synthesize detailViewController;
 
 
-- (void) insertDummyData
-{
-    
-    iCPANAppDelegate *del = [[UIApplication sharedApplication] delegate];
-    NSManagedObjectContext *context = del.managedObjectContext;
-    
-    NSError *error;
-    
-    NSFetchRequest *request = [[NSFetchRequest alloc] init];
-    NSEntityDescription *entity = [NSEntityDescription entityForName:@"Module" inManagedObjectContext:context];
-    [request setEntity:entity];
-    [request setFetchLimit:500];
-    
-    NSSortDescriptor *sort = [[NSSortDescriptor alloc] initWithKey:@"name" ascending:YES selector:@selector(caseInsensitiveCompare:)];
-    [request setSortDescriptors:[NSArray arrayWithObject:sort]];
-    
-    // Execute the fetch — create a mutable copy of the result.
-    error = nil;
-    NSMutableArray *mutableFetchResults = [[context executeFetchRequest:request error:&error] mutableCopy];
-    NSLog(@"got %i results", [mutableFetchResults count]);
-    if (mutableFetchResults == nil) {
-        // Handle the error.
-        NSLog(@"Whoops, couldn't read: %@", [error localizedDescription]);
-    }
-    self.searchResults = mutableFetchResults;
-    
-    [request release];
-        
-}
-
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
@@ -77,7 +47,7 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
     
-    [self insertDummyData];
+    [self doSearch];
 }
 
 - (void)viewDidUnload
@@ -124,6 +94,98 @@
     // Set the detail item in the detail view controller.
     Module *module = [self.searchResults objectAtIndex:indexPath.row];
     detailViewController.detailItem = module;
+}
+
+- (BOOL)searchDisplayController:(UISearchDisplayController *)controller shouldReloadTableForSearchString:(NSString *)searchString
+{
+    //at this point we could call an async method which would look up results and then reload the table
+    NSLog(@"search string: %@", searchString);
+    return NO;
+}
+
+- (void) doSearch
+{
+    
+    iCPANAppDelegate *del = [[UIApplication sharedApplication] delegate];
+    NSManagedObjectContext *MOC = del.managedObjectContext;
+    
+    NSError *error;
+    
+    NSFetchRequest *request = [[NSFetchRequest alloc] init];
+    NSEntityDescription *entity = [NSEntityDescription entityForName:@"Module" inManagedObjectContext:MOC];
+    [request setEntity:entity];
+    [request setFetchLimit:500];
+    
+    NSSortDescriptor *sort = [[NSSortDescriptor alloc] initWithKey:@"name" ascending:YES selector:@selector(caseInsensitiveCompare:)];
+    [request setSortDescriptors:[NSArray arrayWithObject:sort]];
+    
+    // Execute the fetch — create a mutable copy of the result.
+    error = nil;
+    NSMutableArray *mutableFetchResults = [[MOC executeFetchRequest:request error:&error] mutableCopy];
+    NSLog(@"got %i results", [mutableFetchResults count]);
+    if (mutableFetchResults == nil) {
+        // Handle the error.
+        NSLog(@"Whoops, couldn't read: %@", [error localizedDescription]);
+    }
+    self.searchResults = mutableFetchResults;
+    
+    [request release];
+    
+}
+
+#pragma mark Content Filtering
+
+- (void)filterContentForSearchText:(NSString*)searchText
+{
+    
+    searchText = [searchText stringByReplacingOccurrencesOfString:@"-" withString:@"::"];
+    searchText = [searchText stringByReplacingOccurrencesOfString:@"/" withString:@"::"];
+    searchText = [searchText stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+    
+//    if ([searchText isEqualToString:self.prevSearchText]) {
+//        return;
+//    }
+    
+    NSArray *searchWords = [searchText componentsSeparatedByString:@" "];
+    
+    NSMutableArray *predicateArgs = [[NSMutableArray alloc] init];
+    NSString *attributeName = @"name";
+    
+    for (NSString *word in searchWords) {
+        if(![word isEqualToString:@""]) {
+            NSPredicate *wordPredicate = [NSPredicate predicateWithFormat:@"%K CONTAINS[cd] %@", attributeName, word];
+            [predicateArgs addObject:wordPredicate];
+        }
+    }
+    
+    NSPredicate *predicate = nil;
+	if ( [searchWords count] == 1 && !([searchText rangeOfString:@".pm" options:NSBackwardsSearch].location == NSNotFound) ) {
+		searchText = [searchText stringByReplacingOccurrencesOfString:@".pm" withString:@""];
+		predicate = [NSPredicate predicateWithFormat:@"%K ==[cd] %@", attributeName, searchText];
+	}
+    else if([predicateArgs count] > 0) {
+        predicate = [NSCompoundPredicate andPredicateWithSubpredicates:predicateArgs];
+        if([predicateArgs count] ==1) {
+            NSPredicate *beginsPred = [NSPredicate predicateWithFormat:@"%K BEGINSWITH[cd] %@", attributeName, searchText];
+            predicate = [NSCompoundPredicate orPredicateWithSubpredicates:[NSArray arrayWithObjects:beginsPred, predicate, nil]];
+        }
+    } else {
+        iCPANAppDelegate *appDelegate = (iCPANAppDelegate *)[[UIApplication sharedApplication] delegate];
+        NSArray *recentlyViewed = appDelegate.getRecentlyViewed;
+        predicate = [NSPredicate predicateWithFormat:@"%K IN[cd] %@", attributeName, recentlyViewed];
+    }
+    [fetchedResultsController.fetchRequest setPredicate:predicate];
+    
+    NSError *error = nil;
+    if (![[self fetchedResultsController] performFetch:&error]) {
+        // Handle error
+        NSLog(@"filtered fetchedResultsController error %@, %@", error, [error userInfo]);
+        exit(1);
+    }
+    
+    self.prevSearchText = searchText;
+    
+    [predicateArgs release];
 }
 
 @end
