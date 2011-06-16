@@ -18,4 +18,6 @@
 @property (nonatomic, retain) NSManagedObjectContext *managedObjectContext;
 @property (nonatomic, retain) NSMutableArray *searchResults;
 
+- (void) searchModules;
+
 @end

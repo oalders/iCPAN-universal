@@ -47,7 +47,7 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
     
-    [self doSearch];
+    [self searchModules];
 }
 
 - (void)viewDidUnload
@@ -103,7 +103,7 @@
     return NO;
 }
 
-- (void) doSearch
+- (void) searchModules
 {
     
     iCPANAppDelegate *del = [[UIApplication sharedApplication] delegate];
@@ -135,6 +135,7 @@
 
 #pragma mark Content Filtering
 
+/*
 - (void)filterContentForSearchText:(NSString*)searchText
 {
     
@@ -187,5 +188,6 @@
     
     [predicateArgs release];
 }
+*/
 
 @end
