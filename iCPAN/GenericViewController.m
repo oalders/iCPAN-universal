@@ -40,6 +40,37 @@
     // Release any cached data, images, etc that aren't in use.
 }
 
+- (void) searchModules
+{
+    
+    iCPANAppDelegate *del = [[UIApplication sharedApplication] delegate];
+    NSManagedObjectContext *MOC = del.managedObjectContext;
+    
+    NSError *error;
+    
+    NSFetchRequest *request = [[NSFetchRequest alloc] init];
+    NSEntityDescription *entity = [NSEntityDescription entityForName:@"Module" inManagedObjectContext:MOC];
+    [request setEntity:entity];
+    [request setFetchLimit:500];
+    
+    NSSortDescriptor *sort = [[NSSortDescriptor alloc] initWithKey:@"name" ascending:YES selector:@selector(caseInsensitiveCompare:)];
+    [request setSortDescriptors:[NSArray arrayWithObject:sort]];
+    
+    // Execute the fetch — create a mutable copy of the result.
+    error = nil;
+    NSMutableArray *mutableFetchResults = [[MOC executeFetchRequest:request error:&error] mutableCopy];
+    NSLog(@"got %i results", [mutableFetchResults count]);
+    if (mutableFetchResults == nil) {
+        // Handle the error.
+        NSLog(@"Whoops, couldn't read: %@", [error localizedDescription]);
+    }
+    self.searchResults = mutableFetchResults;
+    
+    [request release];
+    
+}
+
+
 #pragma mark - View lifecycle
 
 - (void)viewDidLoad
@@ -103,35 +134,6 @@
     return NO;
 }
 
-- (void) searchModules
-{
-    
-    iCPANAppDelegate *del = [[UIApplication sharedApplication] delegate];
-    NSManagedObjectContext *MOC = del.managedObjectContext;
-    
-    NSError *error;
-    
-    NSFetchRequest *request = [[NSFetchRequest alloc] init];
-    NSEntityDescription *entity = [NSEntityDescription entityForName:@"Module" inManagedObjectContext:MOC];
-    [request setEntity:entity];
-    [request setFetchLimit:500];
-    
-    NSSortDescriptor *sort = [[NSSortDescriptor alloc] initWithKey:@"name" ascending:YES selector:@selector(caseInsensitiveCompare:)];
-    [request setSortDescriptors:[NSArray arrayWithObject:sort]];
-    
-    // Execute the fetch — create a mutable copy of the result.
-    error = nil;
-    NSMutableArray *mutableFetchResults = [[MOC executeFetchRequest:request error:&error] mutableCopy];
-    NSLog(@"got %i results", [mutableFetchResults count]);
-    if (mutableFetchResults == nil) {
-        // Handle the error.
-        NSLog(@"Whoops, couldn't read: %@", [error localizedDescription]);
-    }
-    self.searchResults = mutableFetchResults;
-    
-    [request release];
-    
-}
 
 #pragma mark Content Filtering
 
