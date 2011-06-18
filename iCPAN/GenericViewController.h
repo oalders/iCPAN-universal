@@ -10,14 +10,16 @@
 
 @class DetailViewController;
 
-@interface GenericViewController : UIViewController <UISearchDisplayDelegate, UITableViewDataSource, UITableViewDelegate> {
-    NSManagedObjectContext *managedObjectContext;
+@interface GenericViewController : UIViewController <UISearchDisplayDelegate, UITableViewDataSource, UITableViewDelegate, NSFetchedResultsControllerDelegate> {
+    NSFetchedResultsController *fetchedResultsController;
+    NSManagedObjectContext *context;
+    UITableView *tableView;
 }
 
 @property (nonatomic, retain) IBOutlet DetailViewController *detailViewController;
-@property (nonatomic, retain) NSManagedObjectContext *managedObjectContext;
 @property (nonatomic, retain) NSMutableArray *searchResults;
-
-//- (void) searchModules;
+@property (nonatomic, retain) NSFetchedResultsController *fetchedResultsController;
+@property (nonatomic, retain) NSManagedObjectContext *context;
+@property (nonatomic, retain) UITableView *tableView;
 
 @end

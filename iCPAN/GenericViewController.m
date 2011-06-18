@@ -13,8 +13,11 @@
 
 @implementation GenericViewController
 
-@synthesize managedObjectContext, searchResults;
+@synthesize context;
+@synthesize searchResults;
 @synthesize detailViewController;
+@synthesize fetchedResultsController;
+@synthesize tableView;
 
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -29,6 +32,8 @@
 - (void)dealloc
 {
     [self.searchResults dealloc];
+    self.fetchedResultsController.delegate = nil;
+    self.fetchedResultsController = nil;
     [super dealloc];
 }
 
@@ -40,11 +45,47 @@
     // Release any cached data, images, etc that aren't in use.
 }
 
-- (void) searchModules
-{
+- (NSFetchedResultsController *)fetchedResultsController {
     
+    if (fetchedResultsController != nil) {
+        NSLog(@"fetchedResultsController already exists");
+        return fetchedResultsController;
+    }
+
     iCPANAppDelegate *del = [[UIApplication sharedApplication] delegate];
     NSManagedObjectContext *MOC = del.managedObjectContext;
+    
+    NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
+    NSEntityDescription *entity = [NSEntityDescription 
+                                   entityForName:@"Module" inManagedObjectContext:MOC];
+    [fetchRequest setEntity:entity];
+    
+    NSSortDescriptor *sort = [[NSSortDescriptor alloc] 
+                              initWithKey:@"name" ascending:YES selector:@selector(caseInsensitiveCompare:)];
+    [fetchRequest setSortDescriptors:[NSArray arrayWithObject:sort]];
+    
+    [fetchRequest setFetchBatchSize:20];
+    
+    NSFetchedResultsController *theFetchedResultsController = 
+    [[NSFetchedResultsController alloc] initWithFetchRequest:fetchRequest 
+                                        managedObjectContext:MOC sectionNameKeyPath:nil 
+                                                   cacheName:@"Root"];
+    self.fetchedResultsController = theFetchedResultsController;
+    fetchedResultsController.delegate = self;
+    
+    [sort release];
+    [fetchRequest release];
+    [theFetchedResultsController release];
+    
+    return fetchedResultsController;    
+    
+}
+
+- (void) searchModules
+{
+    iCPANAppDelegate *del = [[UIApplication sharedApplication] delegate];
+    NSManagedObjectContext *MOC = del.managedObjectContext;
+    NSLog(@"searchModules %@", MOC);
     
     NSError *error;
     
@@ -78,6 +119,15 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
     
+    NSError *error;
+	if (![[self fetchedResultsController] performFetch:&error]) {
+		// Update to handle the error appropriately.
+		NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
+		exit(-1);  // Fail
+	}
+    
+    self.title = @"Failed Banks";
+    
     [self searchModules];
 }
 
@@ -86,6 +136,7 @@
     [super viewDidUnload];
     // Release any retained subviews of the main view.
     // e.g. self.myOutlet = nil;
+    self.fetchedResultsController = nil;
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
@@ -109,7 +160,7 @@
     static NSString *CellIdentifier = @"CellIdentifier";
     
     // Dequeue or create a cell of the appropriate type.
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+    UITableViewCell *cell = [self.tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     if (cell == nil) {
         cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier] autorelease];
         cell.accessoryType = UITableViewCellAccessoryNone;
@@ -137,7 +188,7 @@
 
 #pragma mark Content Filtering
 
-/*
+
 - (void)filterContentForSearchText:(NSString*)searchText
 {
     
@@ -173,8 +224,8 @@
             predicate = [NSCompoundPredicate orPredicateWithSubpredicates:[NSArray arrayWithObjects:beginsPred, predicate, nil]];
         }
     } else {
-        iCPANAppDelegate *appDelegate = (iCPANAppDelegate *)[[UIApplication sharedApplication] delegate];
-        NSArray *recentlyViewed = appDelegate.getRecentlyViewed;
+        iCPANAppDelegate *del = [[UIApplication sharedApplication] delegate];
+        NSArray *recentlyViewed = del.getRecentlyViewed;
         predicate = [NSPredicate predicateWithFormat:@"%K IN[cd] %@", attributeName, recentlyViewed];
     }
     [fetchedResultsController.fetchRequest setPredicate:predicate];
@@ -186,10 +237,64 @@
         exit(1);
     }
     
-    self.prevSearchText = searchText;
+    //self.prevSearchText = searchText;
     
     [predicateArgs release];
 }
+
+
+// Apple boilerplate
+
+- (void)controllerWillChangeContent:(NSFetchedResultsController *)controller {
+    // The fetch controller is about to start sending change notifications, so prepare the table view for updates.
+    [self.tableView beginUpdates];
+}
+
+/*
+- (void)controller:(NSFetchedResultsController *)controller didChangeObject:(id)anObject atIndexPath:(NSIndexPath *)indexPath forChangeType:(NSFetchedResultsChangeType)type newIndexPath:(NSIndexPath *)newIndexPath {
+        
+    switch(type) {
+            
+        case NSFetchedResultsChangeInsert:
+            [self.tableView insertRowsAtIndexPaths:[NSArray arrayWithObject:newIndexPath] withRowAnimation:UITableViewRowAnimationFade];
+            break;
+            
+        case NSFetchedResultsChangeDelete:
+            [self.tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];
+            break;
+            
+        case NSFetchedResultsChangeUpdate:
+            [self configureCell:[self.tableView cellForRowAtIndexPath:indexPath] atIndexPath:indexPath];
+            break;
+            
+        case NSFetchedResultsChangeMove:
+            [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];
+            // Reloading the section inserts a new row and ensures that titles are updated appropriately.
+            [tableView reloadSections:[NSIndexSet indexSetWithIndex:newIndexPath.section] withRowAnimation:UITableViewRowAnimationFade];
+            break;
+    }
+}
 */
+
+
+- (void)controller:(NSFetchedResultsController *)controller didChangeSection:(id <NSFetchedResultsSectionInfo>)sectionInfo atIndex:(NSUInteger)sectionIndex forChangeType:(NSFetchedResultsChangeType)type {
+    
+    switch(type) {
+            
+        case NSFetchedResultsChangeInsert:
+            [self.tableView insertSections:[NSIndexSet indexSetWithIndex:sectionIndex] withRowAnimation:UITableViewRowAnimationFade];
+            break;
+            
+        case NSFetchedResultsChangeDelete:
+            [self.tableView deleteSections:[NSIndexSet indexSetWithIndex:sectionIndex] withRowAnimation:UITableViewRowAnimationFade];
+            break;
+    }
+}
+
+
+- (void)controllerDidChangeContent:(NSFetchedResultsController *)controller {
+    // The fetch controller has sent all current change notifications, so tell the table view to process all updates.
+    [self.tableView endUpdates];
+}
 
 @end
