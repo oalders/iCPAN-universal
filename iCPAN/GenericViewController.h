@@ -22,4 +22,6 @@
 @property (nonatomic, retain) NSManagedObjectContext *context;
 @property (nonatomic, retain) UITableView *tableView;
 
+- (void)filterContentForSearchText:(NSString*)searchText;
+
 @end

@@ -69,7 +69,7 @@
     NSFetchedResultsController *theFetchedResultsController = 
     [[NSFetchedResultsController alloc] initWithFetchRequest:fetchRequest 
                                         managedObjectContext:MOC sectionNameKeyPath:nil 
-                                                   cacheName:@"Root"];
+                                                   cacheName:nil];
     self.fetchedResultsController = theFetchedResultsController;
     fetchedResultsController.delegate = self;
     
@@ -81,111 +81,6 @@
     
 }
 
-- (void) searchModules
-{
-    iCPANAppDelegate *del = [[UIApplication sharedApplication] delegate];
-    NSManagedObjectContext *MOC = del.managedObjectContext;
-    NSLog(@"searchModules %@", MOC);
-    
-    NSError *error;
-    
-    NSFetchRequest *request = [[NSFetchRequest alloc] init];
-    NSEntityDescription *entity = [NSEntityDescription entityForName:@"Module" inManagedObjectContext:MOC];
-    [request setEntity:entity];
-    [request setFetchLimit:500];
-    
-    NSSortDescriptor *sort = [[NSSortDescriptor alloc] initWithKey:@"name" ascending:YES selector:@selector(caseInsensitiveCompare:)];
-    [request setSortDescriptors:[NSArray arrayWithObject:sort]];
-    
-    // Execute the fetch — create a mutable copy of the result.
-    error = nil;
-    NSMutableArray *mutableFetchResults = [[MOC executeFetchRequest:request error:&error] mutableCopy];
-    NSLog(@"got %i results", [mutableFetchResults count]);
-    if (mutableFetchResults == nil) {
-        // Handle the error.
-        NSLog(@"Whoops, couldn't read: %@", [error localizedDescription]);
-    }
-    self.searchResults = mutableFetchResults;
-    
-    [request release];
-    
-}
-
-
-#pragma mark - View lifecycle
-
-- (void)viewDidLoad
-{
-    [super viewDidLoad];
-    // Do any additional setup after loading the view from its nib.
-    
-    NSError *error;
-	if (![[self fetchedResultsController] performFetch:&error]) {
-		// Update to handle the error appropriately.
-		NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
-		exit(-1);  // Fail
-	}
-    
-    self.title = @"Failed Banks";
-    
-    [self searchModules];
-}
-
-- (void)viewDidUnload
-{
-    [super viewDidUnload];
-    // Release any retained subviews of the main view.
-    // e.g. self.myOutlet = nil;
-    self.fetchedResultsController = nil;
-}
-
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
-{
-    // Return YES for supported orientations
-	return YES;
-}
-
-- (NSInteger)numberOfSectionsInTableView:(UITableView *)aTableView {
-    // Return the number of sections.
-    return 1;
-}
-
-- (NSInteger)tableView:(UITableView *)aTableView numberOfRowsInSection:(NSInteger)section {
-    // Return the number of rows in the section.
-    return [self.searchResults count];
-}
-
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    
-    static NSString *CellIdentifier = @"CellIdentifier";
-    
-    // Dequeue or create a cell of the appropriate type.
-    UITableViewCell *cell = [self.tableView dequeueReusableCellWithIdentifier:CellIdentifier];
-    if (cell == nil) {
-        cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier] autorelease];
-        cell.accessoryType = UITableViewCellAccessoryNone;
-    }
-    
-    // Configure the cell.
-    cell.textLabel.text = [[self.searchResults objectAtIndex:indexPath.row] name];
-    cell.textLabel.font = [UIFont systemFontOfSize:16];
-    return cell;
-}
-
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    // Set the detail item in the detail view controller.
-    Module *module = [self.searchResults objectAtIndex:indexPath.row];
-    detailViewController.detailItem = module;
-}
-
-- (BOOL)searchDisplayController:(UISearchDisplayController *)controller shouldReloadTableForSearchString:(NSString *)searchString
-{
-    //at this point we could call an async method which would look up results and then reload the table
-    NSLog(@"search string: %@", searchString);
-    return NO;
-}
-
-
 #pragma mark Content Filtering
 
 
@@ -196,9 +91,9 @@
     searchText = [searchText stringByReplacingOccurrencesOfString:@"/" withString:@"::"];
     searchText = [searchText stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
     
-//    if ([searchText isEqualToString:self.prevSearchText]) {
-//        return;
-//    }
+    //    if ([searchText isEqualToString:self.prevSearchText]) {
+    //        return;
+    //    }
     
     NSArray *searchWords = [searchText componentsSeparatedByString:@" "];
     
@@ -240,6 +135,109 @@
     //self.prevSearchText = searchText;
     
     [predicateArgs release];
+}
+
+
+
+
+- (void) searchModules
+{
+    iCPANAppDelegate *del = [[UIApplication sharedApplication] delegate];
+    NSManagedObjectContext *MOC = del.managedObjectContext;
+    NSLog(@"searchModules %@", MOC);
+    
+    NSError *error;
+    
+    NSFetchRequest *request = [[NSFetchRequest alloc] init];
+    NSEntityDescription *entity = [NSEntityDescription entityForName:@"Module" inManagedObjectContext:MOC];
+    [request setEntity:entity];
+    [request setFetchLimit:500];
+    
+    NSSortDescriptor *sort = [[NSSortDescriptor alloc] initWithKey:@"name" ascending:YES selector:@selector(caseInsensitiveCompare:)];
+    [request setSortDescriptors:[NSArray arrayWithObject:sort]];
+    
+    // Execute the fetch — create a mutable copy of the result.
+    error = nil;
+    NSMutableArray *mutableFetchResults = [[MOC executeFetchRequest:request error:&error] mutableCopy];
+    NSLog(@"got %i results", [mutableFetchResults count]);
+    if (mutableFetchResults == nil) {
+        // Handle the error.
+        NSLog(@"Whoops, couldn't read: %@", [error localizedDescription]);
+    }
+    self.searchResults = mutableFetchResults;
+    
+    [request release];
+    
+}
+
+
+#pragma mark - View lifecycle
+
+- (void)viewDidLoad
+{
+    [super viewDidLoad];
+    // Do any additional setup after loading the view from its nib.
+    
+}
+
+- (void)viewDidUnload
+{
+    [super viewDidUnload];
+    // Release any retained subviews of the main view.
+    // e.g. self.myOutlet = nil;
+    self.fetchedResultsController = nil;
+}
+
+- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
+{
+    // Return YES for supported orientations
+	return YES;
+}
+
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)aTableView {
+    // Return the number of sections.
+    return 1;
+}
+
+- (NSInteger)tableView:(UITableView *)aTableView numberOfRowsInSection:(NSInteger)section {
+    // Return the number of rows in the section.
+    id <NSFetchedResultsSectionInfo> sectionInfo = [[fetchedResultsController sections] objectAtIndex:section];
+    
+    return [sectionInfo numberOfObjects];
+}
+
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+    
+    static NSString *CellIdentifier = @"CellIdentifier";
+    
+    // Dequeue or create a cell of the appropriate type.
+    UITableViewCell *cell = [self.tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+    if (cell == nil) {
+        cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier] autorelease];
+        cell.accessoryType = UITableViewCellAccessoryNone;
+    }
+        
+    // Configure the cell.
+    Module *module = [fetchedResultsController objectAtIndexPath:indexPath];
+    NSLog(@"fetched result: %@", module);
+
+    cell.textLabel.text = [module name];
+    cell.textLabel.font = [UIFont systemFontOfSize:16];
+    return cell;
+}
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    // Set the detail item in the detail view controller.
+    Module *module = [self.searchResults objectAtIndex:indexPath.row];
+    detailViewController.detailItem = module;
+}
+
+- (BOOL)searchDisplayController:(UISearchDisplayController *)controller shouldReloadTableForSearchString:(NSString *)searchString
+{
+    //at this point we could call an async method which would look up results and then reload the table
+    NSLog(@"search string: %@", searchString);
+    [self filterContentForSearchText:searchString];
+    return NO;
 }
 
 
