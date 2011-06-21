@@ -636,6 +636,7 @@
 				);
 				"OTHER_LDFLAGS[sdk=iphonesimulator*][arch=*]" = "-all_load";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos4.3;
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -654,6 +655,7 @@
 				);
 				"OTHER_LDFLAGS[sdk=iphonesimulator*][arch=*]" = "-all_load";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos4.3;
 				VALIDATE_PRODUCT = YES;
 				WRAPPER_EXTENSION = app;
 			};
