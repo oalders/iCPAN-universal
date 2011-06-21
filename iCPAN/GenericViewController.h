@@ -17,11 +17,10 @@
 }
 
 @property (nonatomic, retain) IBOutlet DetailViewController *detailViewController;
-@property (nonatomic, retain) NSMutableArray *searchResults;
 @property (nonatomic, retain) NSFetchedResultsController *fetchedResultsController;
 @property (nonatomic, retain) NSManagedObjectContext *context;
 @property (nonatomic, retain) UITableView *tableView;
+@property (nonatomic, retain) NSString *searchString;
 
-- (void)filterContentForSearchText:(NSString*)searchText;
-
+//- (void)getPredicate:(NSString *)searchText;
 @end

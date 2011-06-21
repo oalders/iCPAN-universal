@@ -14,10 +14,10 @@
 @implementation GenericViewController
 
 @synthesize context;
-@synthesize searchResults;
 @synthesize detailViewController;
 @synthesize fetchedResultsController;
 @synthesize tableView;
+@synthesize searchString;
 
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -31,7 +31,6 @@
 
 - (void)dealloc
 {
-    [self.searchResults dealloc];
     self.fetchedResultsController.delegate = nil;
     self.fetchedResultsController = nil;
     [super dealloc];
@@ -47,10 +46,11 @@
 
 - (NSFetchedResultsController *)fetchedResultsController {
     
-    if (fetchedResultsController != nil) {
-        NSLog(@"fetchedResultsController already exists");
-        return fetchedResultsController;
-    }
+    NSLog(@"===================== search %@", self.searchString);
+    //if (fetchedResultsController != nil) {
+    //    NSLog(@"fetchedResultsController already exists");
+    //    return fetchedResultsController;
+    //}
 
     iCPANAppDelegate *del = [[UIApplication sharedApplication] delegate];
     NSManagedObjectContext *MOC = del.managedObjectContext;
@@ -64,29 +64,14 @@
                               initWithKey:@"name" ascending:YES selector:@selector(caseInsensitiveCompare:)];
     [fetchRequest setSortDescriptors:[NSArray arrayWithObject:sort]];
     
-    [fetchRequest setFetchBatchSize:20];
+    [fetchRequest setFetchBatchSize:10];
     
-    NSFetchedResultsController *theFetchedResultsController = 
+    fetchedResultsController = 
     [[NSFetchedResultsController alloc] initWithFetchRequest:fetchRequest 
                                         managedObjectContext:MOC sectionNameKeyPath:nil 
                                                    cacheName:nil];
-    self.fetchedResultsController = theFetchedResultsController;
-    fetchedResultsController.delegate = self;
     
-    [sort release];
-    [fetchRequest release];
-    [theFetchedResultsController release];
-    
-    return fetchedResultsController;    
-    
-}
-
-#pragma mark Content Filtering
-
-
-- (void)filterContentForSearchText:(NSString*)searchText
-{
-    
+    NSString *searchText = self.searchString;
     searchText = [searchText stringByReplacingOccurrencesOfString:@"-" withString:@"::"];
     searchText = [searchText stringByReplacingOccurrencesOfString:@"/" withString:@"::"];
     searchText = [searchText stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
@@ -123,53 +108,24 @@
         NSArray *recentlyViewed = del.getRecentlyViewed;
         predicate = [NSPredicate predicateWithFormat:@"%K IN[cd] %@", attributeName, recentlyViewed];
     }
+    
+    NSLog(@"predicate is now: %@", predicate);
+
     [fetchedResultsController.fetchRequest setPredicate:predicate];
+    fetchedResultsController.delegate = self;
     
-    NSError *error = nil;
-    if (![[self fetchedResultsController] performFetch:&error]) {
-        // Handle error
-        NSLog(@"filtered fetchedResultsController error %@, %@", error, [error userInfo]);
-        exit(1);
+    NSError * error = nil;
+    [fetchedResultsController performFetch:&error];
+    if (error) {
+        // report error
     }
     
-    //self.prevSearchText = searchText;
+    [sort release];
+    [fetchRequest release];
     
-    [predicateArgs release];
-}
-
-
-
-
-- (void) searchModules
-{
-    iCPANAppDelegate *del = [[UIApplication sharedApplication] delegate];
-    NSManagedObjectContext *MOC = del.managedObjectContext;
-    NSLog(@"searchModules %@", MOC);
-    
-    NSError *error;
-    
-    NSFetchRequest *request = [[NSFetchRequest alloc] init];
-    NSEntityDescription *entity = [NSEntityDescription entityForName:@"Module" inManagedObjectContext:MOC];
-    [request setEntity:entity];
-    [request setFetchLimit:500];
-    
-    NSSortDescriptor *sort = [[NSSortDescriptor alloc] initWithKey:@"name" ascending:YES selector:@selector(caseInsensitiveCompare:)];
-    [request setSortDescriptors:[NSArray arrayWithObject:sort]];
-    
-    // Execute the fetch — create a mutable copy of the result.
-    error = nil;
-    NSMutableArray *mutableFetchResults = [[MOC executeFetchRequest:request error:&error] mutableCopy];
-    NSLog(@"got %i results", [mutableFetchResults count]);
-    if (mutableFetchResults == nil) {
-        // Handle the error.
-        NSLog(@"Whoops, couldn't read: %@", [error localizedDescription]);
-    }
-    self.searchResults = mutableFetchResults;
-    
-    [request release];
+    return fetchedResultsController;    
     
 }
-
 
 #pragma mark - View lifecycle
 
@@ -219,7 +175,7 @@
         
     // Configure the cell.
     Module *module = [fetchedResultsController objectAtIndexPath:indexPath];
-    NSLog(@"fetched result: %@", module);
+    NSLog(@"fetched result: %@", [module name]);
 
     cell.textLabel.text = [module name];
     cell.textLabel.font = [UIFont systemFontOfSize:16];
@@ -228,16 +184,18 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     // Set the detail item in the detail view controller.
-    Module *module = [self.searchResults objectAtIndex:indexPath.row];
+    Module *module = [fetchedResultsController objectAtIndexPath:indexPath];
     detailViewController.detailItem = module;
 }
 
-- (BOOL)searchDisplayController:(UISearchDisplayController *)controller shouldReloadTableForSearchString:(NSString *)searchString
+- (BOOL)searchDisplayController:(UISearchDisplayController *)controller shouldReloadTableForSearchString:(NSString *)searchTerm
 {
     //at this point we could call an async method which would look up results and then reload the table
-    NSLog(@"search string: %@", searchString);
-    [self filterContentForSearchText:searchString];
-    return NO;
+    NSLog(@"search string: %@", searchTerm);
+    self.searchString = searchTerm;
+    
+    [self fetchedResultsController];
+    return YES;
 }
 
 
