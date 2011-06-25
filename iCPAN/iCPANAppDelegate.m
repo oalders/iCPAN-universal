@@ -150,7 +150,11 @@
         return __persistentStoreCoordinator;
     }
     
-    NSURL *storeURL = [[self applicationDocumentsDirectory] URLByAppendingPathComponent:@"iCPAN.sqlite"];
+    NSString *storePath = [[[NSBundle mainBundle] resourcePath] stringByAppendingPathComponent:@"iCPAN.sqlite"];
+    NSURL *storeURL = [NSURL fileURLWithPath:storePath];
+
+    NSLog(@"store url %@", storePath);
+    //NSURL *storeURL = [[self applicationDocumentsDirectory] URLByAppendingPathComponent:@"iCPAN.sqlite"];
     NSLog(@"DB: %@", storeURL);
     
     NSError *error = nil;
@@ -183,7 +187,7 @@
         NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
         abort();
     }    
-    
+    [storeURL release];
     return __persistentStoreCoordinator;
 }
 

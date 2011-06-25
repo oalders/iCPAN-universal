@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		ED089F3113B5993B0025CC2B /* iCPAN.sqlite in Resources */ = {isa = PBXBuildFile; fileRef = ED089F3013B5993B0025CC2B /* iCPAN.sqlite */; };
 		ED4B5C091383761600386B42 /* iCPANAppDelegate_iPad.m in Sources */ = {isa = PBXBuildFile; fileRef = ED4B5C021383761600386B42 /* iCPANAppDelegate_iPad.m */; };
 		ED4B5C0A1383761600386B42 /* MainWindow_iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = ED4B5C031383761600386B42 /* MainWindow_iPad.xib */; };
 		ED4B5C0B1383761600386B42 /* DetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = ED4B5C051383761600386B42 /* DetailViewController.m */; };
@@ -70,6 +71,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		ED089F3013B5993B0025CC2B /* iCPAN.sqlite */ = {isa = PBXFileReference; lastKnownFileType = file; path = iCPAN.sqlite; sourceTree = SOURCE_ROOT; };
 		ED4B5C011383761600386B42 /* iCPANAppDelegate_iPad.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = iCPANAppDelegate_iPad.h; sourceTree = "<group>"; };
 		ED4B5C021383761600386B42 /* iCPANAppDelegate_iPad.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = iCPANAppDelegate_iPad.m; sourceTree = "<group>"; };
 		ED4B5C031383761600386B42 /* MainWindow_iPad.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MainWindow_iPad.xib; sourceTree = "<group>"; };
@@ -324,6 +326,7 @@
 		EDF7CE2B134438880012E9DA /* iCPAN */ = {
 			isa = PBXGroup;
 			children = (
+				ED089F3013B5993B0025CC2B /* iCPAN.sqlite */,
 				EDF7CE34134438880012E9DA /* iCPANAppDelegate.h */,
 				EDF7CE35134438880012E9DA /* iCPANAppDelegate.m */,
 				ED706ADB13A7277400AAE86E /* Model */,
@@ -480,6 +483,7 @@
 				ED706AE613A7283700AAE86E /* shBrushJScript.js in Resources */,
 				ED706AE713A7283700AAE86E /* shBrushPerl.js in Resources */,
 				ED706AE813A7283700AAE86E /* shCore.js in Resources */,
+				ED089F3113B5993B0025CC2B /* iCPAN.sqlite in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
