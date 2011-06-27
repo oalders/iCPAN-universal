@@ -20,7 +20,9 @@ my ( $opt, $usage ) = describe_options(
 print($usage->text), exit if $opt->help;
 
 my $icpan = iCPAN->new;
-$icpan->db_file( 'iCPAN.sqlite' );
+$icpan->db_file( '../iCPAN.sqlite' );
+$icpan->search_prefix("");
+$icpan->dist_search_prefix("");
 my $schema = $icpan->schema;
 
 if ( $opt->{debug} ) {

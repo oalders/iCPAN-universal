@@ -22,6 +22,8 @@ has 'pod_server' => ( is => 'rw', default => 'http://localhost:5000/pod/' );
 has 'search_prefix' => ( is => 'rw', isa => 'Str', default => 'DBIx::Class' );
 has 'dist_search_prefix' =>
     ( is => 'rw', isa => 'Str', default => 'DBIx-Class' );
+has 'limit'       => ( is => 'rw', isa => 'Int', default => 100000 );
+has 'scroll_size' => ( is => 'rw', isa => 'Int', default => 500 );
 has 'server' => ( is => 'rw', default => 'api.beta.metacpan.org:80' );
 
 sub _build_es {
@@ -66,6 +68,7 @@ sub scroll {
             ? $result->{'_source'}
             : $result->{fields};
         say dump $hits[-1];
+        say @hits . ' results so far';
 
         last if scalar @hits > $limit;
 
@@ -133,11 +136,11 @@ sub insert_distributions {
             'name',   'date'
         ],
         scroll  => '5m',
-        size    => 100,
+        size    => 5000,
         explain => 0,
     );
 
-    my $hits = $self->scroll( $scroller, 500 );
+    my $hits = $self->scroll( $scroller, $self->limit );
     my @rows = ();
 
     say "found " . scalar @{$hits} . " hits";
@@ -145,7 +148,8 @@ sub insert_distributions {
     my $ent = $self->get_ent( 'Distribution' );
 
     foreach my $src ( @{$hits} ) {
-        say dump $src;
+
+        #say dump $src;
 
         my $author = $self->schema->resultset( 'Zauthor' )
             ->find( { zpauseid => $src->{author} } );
@@ -178,28 +182,32 @@ sub insert_modules {
     my $rs   = $self->schema->resultset( 'Zmodule' );
     $rs->delete;
 
-    my $size = 250;
-
     my $scroller = $self->es->scrolled_search(
         index => $self->index,
         type  => ['file'],
 
         query => { "match_all" => {} },
 
-        "filter" => {
-            "and" => [
-                { "exists" => { "field"       => "file.documentation" } },
-                { "term"   => { "file.status" => "latest" } },
-                {   "prefix" =>
-                        { "file.documentation" => $self->search_prefix }
+        filter => {
+            and => [
+                { exists => { field         => "file.documentation" } },
+                { term   => { "file.status" => "latest" } },
+                {   not => {
+                        filter => { term => { 'file.authorized' => \0 }, },
+                    },
                 },
+
+     #                {   "prefix" =>
+     #                        { "file.documentation" => $self->search_prefix }
+     #                },
             ]
         },
 
-        "fields" => [ "abstract.analyzed", "documentation", "distribution" ],
-        scroll   => '5m',
-        size     => $size,
-        explain  => 0,
+        sort => [ { "date" => "desc" } ],
+        fields  => [ "abstract.analyzed", "documentation", "distribution", "date" ],
+        scroll  => '5m',
+        size    => $self->scroll_size,
+        explain => 0,
     );
 
     my $ent = $self->get_ent( 'Module' );
@@ -211,8 +219,17 @@ sub insert_modules {
         next if !$src;
         say dump $src;
 
+        # exclude .pl, .t and other stuff that doesn't look to be a module
+        next if $src->{documentation} =~ m{\.};
+
+        # if the doc name looks nothing like the dist name, forget it
+        next
+            if (
+            substr( $src->{documentation}, 0, 1 ) ne
+            substr( $src->{distribution}, 0, 1 ) );
+
         my $pod_url = $self->pod_server . $src->{documentation};
-        say "GETting: $pod_url";
+        say scalar @rows . " GETting: $pod_url";
 
         my $pod
             = $self->mech->get( $pod_url )->is_success
@@ -242,7 +259,7 @@ sub insert_modules {
             zpod          => $pod,
             };
 
-        if ( scalar @rows >= $size ) {
+        if ( scalar @rows >= 50 ) {
             say "inserting " . scalar @rows . " rows";
             $rs->populate( \@rows );
             $self->update_ent( $rs, $ent );
