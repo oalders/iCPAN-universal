@@ -23,6 +23,7 @@ my $icpan = iCPAN->new;
 $icpan->db_file( '../iCPAN.sqlite' );
 $icpan->search_prefix("");
 $icpan->dist_search_prefix("");
+$icpan->purge(1);
 my $schema = $icpan->schema;
 
 if ( $opt->{debug} ) {

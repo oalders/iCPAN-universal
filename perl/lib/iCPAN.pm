@@ -18,13 +18,18 @@ has 'es' => ( is => 'rw', isa => 'ElasticSearch', lazy_build => 1 );
 has 'index' => ( is => 'rw', default => 'v0' );
 has 'mech' =>
     ( is => 'rw', isa => 'WWW::Mechanize::Cached', lazy_build => 1 );
-has 'pod_server' => ( is => 'rw', default => 'http://localhost:5000/pod/' );
+has 'pod_server' =>
+    ( is => 'rw', default => 'http://localhost:5000/podpath/' );
 has 'search_prefix' => ( is => 'rw', isa => 'Str', default => 'DBIx::Class' );
 has 'dist_search_prefix' =>
     ( is => 'rw', isa => 'Str', default => 'DBIx-Class' );
 has 'limit'       => ( is => 'rw', isa => 'Int', default => 100000 );
+has 'purge'       => ( is => 'rw', isa => 'Int', default => 0 );
 has 'scroll_size' => ( is => 'rw', isa => 'Int', default => 500 );
 has 'server' => ( is => 'rw', default => 'api.beta.metacpan.org:80' );
+
+my @ROGUE_DISTRIBUTIONS
+    = qw(kurila perl_debug perl-5.005_02+apache1.3.3+modperl pod2texi perlbench spodcxx);
 
 sub _build_es {
 
@@ -81,7 +86,7 @@ sub insert_authors {
 
     my $self = shift;
     my $rs   = $self->schema->resultset( 'Zauthor' );
-    $rs->delete;
+    $rs->delete if $self->purge;
 
     my $scroller = $self->es->scrolled_search(
         index  => $self->index,
@@ -120,7 +125,7 @@ sub insert_distributions {
 
     my $self = shift;
     my $rs   = $self->schema->resultset( 'Zdistribution' );
-    $rs->delete;
+    $rs->delete if $self->purge;
 
     my $scroller = $self->es->scrolled_search(
         index => $self->index,
@@ -135,7 +140,7 @@ sub insert_distributions {
             'author', 'distribution', 'abstract', 'version_numified',
             'name',   'date'
         ],
-        scroll  => '5m',
+        scroll  => '30m',
         size    => 5000,
         explain => 0,
     );
@@ -180,7 +185,7 @@ sub insert_modules {
 
     my $self = shift;
     my $rs   = $self->schema->resultset( 'Zmodule' );
-    $rs->delete;
+    $rs->delete if $self->purge;
 
     my $scroller = $self->es->scrolled_search(
         index => $self->index,
@@ -190,22 +195,50 @@ sub insert_modules {
 
         filter => {
             and => [
-                { exists => { field         => "file.documentation" } },
-                { term   => { "file.status" => "latest" } },
                 {   not => {
-                        filter => { term => { 'file.authorized' => \0 }, },
-                    },
+                        filter => {
+                            or => [
+                                map {
+                                    { term => { 'file.distribution' => $_ } }
+                                    } @ROGUE_DISTRIBUTIONS
+                            ]
+                        }
+                    }
                 },
+                { term => { status => 'latest' } },
+                {   or => [
 
-     #                {   "prefix" =>
-     #                        { "file.documentation" => $self->search_prefix }
-     #                },
+                        # we are looking for files that have no authorized
+                        # property (e.g. .pod files) and files that are
+                        # authorized
+                        { missing => { field => 'file.authorized' } },
+                        { term => { 'file.authorized' => \1 } },
+                    ]
+                },
+                {   or => [
+                        {   and => [
+                                { exists => { field => 'file.module.name' } },
+                                { term => { 'file.module.indexed' => \1 } }
+                            ]
+                        },
+                        {   and => [
+                                { exists => { field => 'documentation' } },
+                                { term => { 'file.indexed' => \1 } }
+                            ]
+                        }
+                    ]
+                }
             ]
         },
 
-        sort => [ { "date" => "desc" } ],
-        fields  => [ "abstract.analyzed", "documentation", "distribution", "date" ],
-        scroll  => '5m',
+        sort   => [ { "date" => "desc" } ],
+        fields => [
+            "abstract.analyzed", "documentation",
+            "distribution",      "date",
+            "author",            "release",
+            "path"
+        ],
+        scroll  => '90m',
         size    => $self->scroll_size,
         explain => 0,
     );
@@ -228,7 +261,10 @@ sub insert_modules {
             substr( $src->{documentation}, 0, 1 ) ne
             substr( $src->{distribution}, 0, 1 ) );
 
-        my $pod_url = $self->pod_server . $src->{documentation};
+        #my $pod_url = $self->pod_server . $src->{documentation};
+        my $pod_url = $self->pod_server
+            . join( "/", $src->{author}, $src->{release}, $src->{path} );
+
         say scalar @rows . " GETting: $pod_url";
 
         my $pod
