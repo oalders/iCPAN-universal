@@ -24,17 +24,13 @@ $icpan->db_file( '../iCPAN.sqlite' );
 $icpan->search_prefix("");
 $icpan->dist_search_prefix("");
 $icpan->purge(1);
+$icpan->children(10);
 my $schema = $icpan->schema;
 
 if ( $opt->{debug} ) {
     say dump( $schema );    
 }
 
-
 my $method =  'insert_' . $opt->{table};
-if ( $opt->{table} eq 'authors' ) {
-#    $icpan->server('hostingmirror1.wundersolutions.com:9200');
-#    $icpan->index('cpan');    
-}
 
 $icpan->$method;

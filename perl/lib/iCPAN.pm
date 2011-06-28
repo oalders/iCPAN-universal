@@ -5,6 +5,8 @@ use Data::Dump qw( dump );
 use ElasticSearch;
 use Modern::Perl;
 use Moose;
+use Parallel::ForkManager;
+use WWW::Mechanize;
 use WWW::Mechanize::Cached;
 
 with 'iCPAN::Role::DB';
@@ -14,7 +16,8 @@ use iCPAN::Schema;
 
 # ssh -L 9201:localhost:9200 metacpan@api.beta.metacpan.org -p222 -N
 
-has 'es' => ( is => 'rw', isa => 'ElasticSearch', lazy_build => 1 );
+has 'es'       => ( is => 'rw', isa => 'ElasticSearch', lazy_build => 1 );
+has 'children' => ( is => 'rw', isa => 'Int',           default    => 2 );
 has 'index' => ( is => 'rw', default => 'v0' );
 has 'mech' =>
     ( is => 'rw', isa => 'WWW::Mechanize::Cached', lazy_build => 1 );
@@ -25,7 +28,7 @@ has 'dist_search_prefix' =>
     ( is => 'rw', isa => 'Str', default => 'DBIx-Class' );
 has 'limit'       => ( is => 'rw', isa => 'Int', default => 100000 );
 has 'purge'       => ( is => 'rw', isa => 'Int', default => 0 );
-has 'scroll_size' => ( is => 'rw', isa => 'Int', default => 500 );
+has 'scroll_size' => ( is => 'rw', isa => 'Int', default => 1000 );
 has 'server' => ( is => 'rw', default => 'api.beta.metacpan.org:80' );
 
 my @ROGUE_DISTRIBUTIONS
@@ -47,15 +50,18 @@ sub _build_es {
 
 sub _build_mech {
 
-    my $self  = shift;
-    my $cache = CHI->new(
-        driver   => 'File',
-        root_dir => '/tmp/icpan'
+    my $self = shift;
+
+    my $folder = "$ENV{HOME}/tmp/iCPAN";
+    my $cache  = CHI->new(
+        driver     => 'FastMmap',
+        root_dir   => $folder,
+        cache_size => '800m'
     );
 
     my $mech = WWW::Mechanize::Cached->new( autocheck => 0, cache => $cache );
 
-    #my $mech = WWW::Mechanize( autocheck => 0 );
+    #my $mech = WWW::Mechanize->new( autocheck => 0 );
     return $mech;
 
 }
@@ -72,8 +78,9 @@ sub scroll {
         push @hits, exists $result->{'_source'}
             ? $result->{'_source'}
             : $result->{fields};
-        say dump $hits[-1];
-        say @hits . ' results so far';
+
+        #say dump $hits[-1];
+        #say @hits . ' results so far';
 
         last if scalar @hits > $limit;
 
@@ -86,7 +93,10 @@ sub insert_authors {
 
     my $self = shift;
     my $rs   = $self->schema->resultset( 'Zauthor' );
-    $rs->delete if $self->purge;
+    if ( $self->purge ) {
+        $rs->delete;
+        $self->schema->storage->dbh->do( "VACUUM" );
+    }
 
     my $scroller = $self->es->scrolled_search(
         index  => $self->index,
@@ -175,7 +185,7 @@ sub insert_distributions {
             };
     }
 
-    $rs->populate( \@rows );
+    $rs->populate( \@rows ) if @rows;
     $self->update_ent( $rs, $ent );
     return;
 
@@ -184,10 +194,144 @@ sub insert_distributions {
 sub insert_modules {
 
     my $self = shift;
-    my $rs   = $self->schema->resultset( 'Zmodule' );
-    $rs->delete if $self->purge;
+    my $rs   = $self->init_rs( 'Zmodule' );
 
-    my $scroller = $self->es->scrolled_search(
+    my $scroller = $self->module_scroller;
+
+    my $ent = $self->get_ent( 'Module' );
+
+    my $pm   = new Parallel::ForkManager( $self->children );
+    my @hits = ();
+    my @rows = ();
+    while ( my $result = $scroller->next ) {
+
+        push @rows, $result;
+
+        if ( scalar @rows >= 100 ) {
+            my @todo = @rows;
+            @rows = ();
+            $pm->start and next;    # fork
+            $self->module_hits( \@todo, $ent, $rs );
+            $pm->finish;
+        }
+
+    }
+
+    $pm->wait_all_children;
+
+    if ( scalar @rows > 0 ) {
+        $self->module_hits( \@rows, $ent, $rs );
+    }
+
+    $self->update_ent( $rs, $ent );
+
+    return;
+
+}
+
+sub extract_hit {
+
+    my $self   = shift;
+    my $result = shift;
+
+    return exists $result->{'_source'}
+        ? $result->{'_source'}
+        : $result->{fields};
+
+}
+
+sub get_ent {
+
+    my $self  = shift;
+    my $table = shift;
+
+    return $self->schema->resultset( 'ZPrimarykey' )
+        ->find( { z_name => $table } );
+
+}
+
+sub update_ent {
+
+    my ( $self, $rs, $ent ) = @_;
+    my $last = $rs->search( {}, { order_by => 'z_pk DESC' } )->first;
+    $ent->z_max( $last->id );
+    $ent->update;
+
+}
+
+sub module_hits {
+
+    my $self = shift;
+    my $hits = shift;
+    my $ent  = shift;
+    my $rs   = shift;
+
+    my @rows = ();
+
+    foreach my $result ( @{$hits} ) {
+
+        my $src = $self->extract_hit( $result );
+        next if !$src;
+
+        #say dump $src;
+        say sprintf( "%s: %s (%s)",
+            $src->{distribution}, $src->{documentation}, $src->{date} );
+
+        my $pod_url = $self->pod_server
+            . join( "/", $src->{author}, $src->{release}, $src->{path} );
+
+        say "GETting: $pod_url";
+
+        my $pod
+            = $self->mech->get( $pod_url )->is_success
+            ? $self->mech->content
+            : undef;
+
+        if ( !$pod ) {
+            say "no pod found.  skipping!!!";
+            next;
+        }
+
+        # TODO why are there multiple dists with the same name in this table. 
+        my $dist = $self->schema->resultset( 'Zdistribution' )
+            ->search( { zname => $src->{distribution} } )->first;
+
+        # doing a find_or_create for each row would be too many extra selects
+        if ( !$dist ) {
+            $dist = $self->schema->resultset( 'Zdistribution' )->create(
+                {   zauthor       => $src->{author},
+                    zrelease_date => $src->{date},
+                    zname         => $src->{distribution},
+                    zversion      => $src->{version_numified},
+                    zabstract     => $src->{abstract}
+                }
+            );
+        }
+
+        my $insert = {
+            z_ent         => $ent->z_ent,
+            z_opt         => 1,
+            zabstract     => $src->{'abstract.analyzed'},
+            zdistribution => $dist->z_pk,
+            zname         => $src->{documentation},
+            zpod          => $pod,
+        };
+        push @rows, $insert;
+
+    }
+
+    $rs->populate( \@rows ) if @rows;
+    say "inserted " . @rows . " modules";
+    say "total inserts: " . $rs->search( {} )->count;
+
+    return;
+
+}
+
+sub module_scroller {
+
+    my $self = shift;
+    return $self->es->scrolled_search(
         index => $self->index,
         type  => ['file'],
 
@@ -238,108 +382,33 @@ sub insert_modules {
             "author",            "release",
             "path"
         ],
-        scroll  => '90m',
+        scroll  => '15m',
         size    => $self->scroll_size,
         explain => 0,
     );
 
-    my $ent = $self->get_ent( 'Module' );
+}
 
-    my @rows = ();
-    while ( my $result = $scroller->next ) {
+sub init_rs {
 
-        my $src = $self->extract_hit( $result );
-        next if !$src;
-        say dump $src;
+    my $self = shift;
+    my $name = shift;
+    my $rs   = $self->schema->resultset( $name );
 
-        # exclude .pl, .t and other stuff that doesn't look to be a module
-        next if $src->{documentation} =~ m{\.};
-
-        # if the doc name looks nothing like the dist name, forget it
-        next
-            if (
-            substr( $src->{documentation}, 0, 1 ) ne
-            substr( $src->{distribution}, 0, 1 ) );
-
-        #my $pod_url = $self->pod_server . $src->{documentation};
-        my $pod_url = $self->pod_server
-            . join( "/", $src->{author}, $src->{release}, $src->{path} );
-
-        say scalar @rows . " GETting: $pod_url";
-
-        my $pod
-            = $self->mech->get( $pod_url )->is_success
-            ? $self->mech->content
-            : undef;
-
-        if ( !$pod ) {
-            say "no pod found.  skipping!!!";
-            next;
-        }
-
-        my $dist = $self->schema->resultset( 'Zdistribution' )
-            ->find( { zname => $src->{distribution} } );
-
-        if ( !$dist ) {
-            say "cannot find $src->{distribution}. skipping!!!";
-            next;
-        }
-
-        push @rows,
-            {
-            z_ent         => $ent->z_ent,
-            z_opt         => 1,
-            zabstract     => $src->{'abstract.analyzed'},
-            zdistribution => $dist->z_pk,
-            zname         => $src->{documentation},
-            zpod          => $pod,
-            };
-
-        if ( scalar @rows >= 50 ) {
-            say "inserting " . scalar @rows . " rows";
-            $rs->populate( \@rows );
-            $self->update_ent( $rs, $ent );
-            @rows = ();
-        }
+    if ( $self->purge ) {
+        $rs->delete;
+        $self->schema->storage->dbh->do( "VACUUM" );
     }
 
-    say dump \@rows;
-
-    $rs->populate( \@rows ) if scalar @rows;
-    $self->update_ent( $rs, $ent );
-
-    return;
-
-}
-
-sub extract_hit {
-
-    my $self   = shift;
-    my $result = shift;
-
-    return exists $result->{'_source'}
-        ? $result->{'_source'}
-        : $result->{fields};
-
-}
-
-sub get_ent {
-
-    my $self  = shift;
-    my $table = shift;
-
-    return $self->schema->resultset( 'ZPrimarykey' )
-        ->find( { z_name => $table } );
-
-}
-
-sub update_ent {
-
-    my ( $self, $rs, $ent ) = @_;
-    my $last = $rs->search( {}, { order_by => 'z_pk DESC' } )->first;
-    $ent->z_max( $last->id );
-    $ent->update;
-
+    return $rs;
 }
 
 1;
+
+=pod
+
+=head2 init_rs( $dbic_table_name )
+
+Truncates table if required.  Returns a resultset for the table.
+
+=cut
