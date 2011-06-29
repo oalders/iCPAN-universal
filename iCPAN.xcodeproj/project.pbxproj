@@ -7,13 +7,13 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		ED089F3113B5993B0025CC2B /* iCPAN.sqlite in Resources */ = {isa = PBXBuildFile; fileRef = ED089F3013B5993B0025CC2B /* iCPAN.sqlite */; };
 		ED4B5C091383761600386B42 /* iCPANAppDelegate_iPad.m in Sources */ = {isa = PBXBuildFile; fileRef = ED4B5C021383761600386B42 /* iCPANAppDelegate_iPad.m */; };
 		ED4B5C0A1383761600386B42 /* MainWindow_iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = ED4B5C031383761600386B42 /* MainWindow_iPad.xib */; };
 		ED4B5C0B1383761600386B42 /* DetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = ED4B5C051383761600386B42 /* DetailViewController.m */; };
 		ED4B5C0C1383761600386B42 /* DetailViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = ED4B5C061383761600386B42 /* DetailViewController.xib */; };
 		ED4B5C1F1383844A00386B42 /* GenericViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = ED4B5C1D1383844900386B42 /* GenericViewController.m */; };
 		ED4B5C201383844A00386B42 /* GenericViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = ED4B5C1E1383844900386B42 /* GenericViewController.xib */; };
+		ED4F1C5113BA8EAA0054B600 /* iCPAN.sqlite in Resources */ = {isa = PBXBuildFile; fileRef = ED4F1C5013BA8EAA0054B600 /* iCPAN.sqlite */; };
 		ED706AB913A714D200AAE86E /* libGRMustache1-ios4.a in Frameworks */ = {isa = PBXBuildFile; fileRef = ED706AB813A714D200AAE86E /* libGRMustache1-ios4.a */; };
 		ED706ADE13A7280800AAE86E /* template.html in Resources */ = {isa = PBXBuildFile; fileRef = ED706ADD13A7280800AAE86E /* template.html */; };
 		ED706AE413A7283700AAE86E /* iCPAN.js in Resources */ = {isa = PBXBuildFile; fileRef = ED706ADF13A7283700AAE86E /* iCPAN.js */; };
@@ -71,7 +71,6 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		ED089F3013B5993B0025CC2B /* iCPAN.sqlite */ = {isa = PBXFileReference; lastKnownFileType = file; path = iCPAN.sqlite; sourceTree = SOURCE_ROOT; };
 		ED4B5C011383761600386B42 /* iCPANAppDelegate_iPad.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = iCPANAppDelegate_iPad.h; sourceTree = "<group>"; };
 		ED4B5C021383761600386B42 /* iCPANAppDelegate_iPad.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = iCPANAppDelegate_iPad.m; sourceTree = "<group>"; };
 		ED4B5C031383761600386B42 /* MainWindow_iPad.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MainWindow_iPad.xib; sourceTree = "<group>"; };
@@ -81,6 +80,7 @@
 		ED4B5C1C1383844900386B42 /* GenericViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GenericViewController.h; sourceTree = "<group>"; };
 		ED4B5C1D1383844900386B42 /* GenericViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GenericViewController.m; sourceTree = "<group>"; };
 		ED4B5C1E1383844900386B42 /* GenericViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = GenericViewController.xib; sourceTree = "<group>"; };
+		ED4F1C5013BA8EAA0054B600 /* iCPAN.sqlite */ = {isa = PBXFileReference; lastKnownFileType = file; path = iCPAN.sqlite; sourceTree = SOURCE_ROOT; };
 		ED706AAB13A714BE00AAE86E /* GRBoolean.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GRBoolean.h; sourceTree = "<group>"; };
 		ED706AAC13A714BE00AAE86E /* GRMustache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GRMustache.h; sourceTree = "<group>"; };
 		ED706AAD13A714BE00AAE86E /* GRMustacheConfiguration.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GRMustacheConfiguration.h; sourceTree = "<group>"; };
@@ -326,7 +326,7 @@
 		EDF7CE2B134438880012E9DA /* iCPAN */ = {
 			isa = PBXGroup;
 			children = (
-				ED089F3013B5993B0025CC2B /* iCPAN.sqlite */,
+				ED4F1C5013BA8EAA0054B600 /* iCPAN.sqlite */,
 				EDF7CE34134438880012E9DA /* iCPANAppDelegate.h */,
 				EDF7CE35134438880012E9DA /* iCPANAppDelegate.m */,
 				ED706ADB13A7277400AAE86E /* Model */,
@@ -483,7 +483,7 @@
 				ED706AE613A7283700AAE86E /* shBrushJScript.js in Resources */,
 				ED706AE713A7283700AAE86E /* shBrushPerl.js in Resources */,
 				ED706AE813A7283700AAE86E /* shCore.js in Resources */,
-				ED089F3113B5993B0025CC2B /* iCPAN.sqlite in Resources */,
+				ED4F1C5113BA8EAA0054B600 /* iCPAN.sqlite in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

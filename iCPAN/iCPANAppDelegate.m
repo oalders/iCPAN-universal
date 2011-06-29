@@ -154,7 +154,9 @@
     NSURL *storeURL = [NSURL fileURLWithPath:storePath];
 
     NSLog(@"store url %@", storePath);
-    //NSURL *storeURL = [[self applicationDocumentsDirectory] URLByAppendingPathComponent:@"iCPAN.sqlite"];
+    
+    // uncomment if recreating the database
+    //storeURL = [[self applicationDocumentsDirectory] URLByAppendingPathComponent:@"iCPAN.sqlite"];
     NSLog(@"DB: %@", storeURL);
     
     NSError *error = nil;

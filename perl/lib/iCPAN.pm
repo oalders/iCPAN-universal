@@ -180,6 +180,7 @@ sub insert_distributions {
             zabstract     => $src->{abstract},
             zauthor       => $author->z_pk,
             zrelease_date => $src->{date},
+            zrelease_name => $src->{name},
             zversion      => $src->{version_numified},
             zname         => $src->{distribution},
             };
@@ -193,35 +194,63 @@ sub insert_distributions {
 
 sub insert_modules {
 
-    my $self = shift;
-    my $rs   = $self->init_rs( 'Zmodule' );
+    my $self    = shift;
+    my $rs      = $self->init_rs( 'Zmodule' );
+    my $dist_rs = $self->schema->resultset( 'Zdistribution' );
 
     my $scroller = $self->module_scroller;
 
     my $ent = $self->get_ent( 'Module' );
 
-    my $pm   = new Parallel::ForkManager( $self->children );
-    my @hits = ();
-    my @rows = ();
+    my %dist_id = ();
+    my @hits    = ();
+    my @rows    = ();
     while ( my $result = $scroller->next ) {
 
-        push @rows, $result;
+        my $src = $self->extract_hit( $result );
+        next if !$src;
+        next if !$src->{documentation};
 
-        if ( scalar @rows >= 100 ) {
-            my @todo = @rows;
+        # TODO why are there multiple dists with the same name in this table?
+        if ( !exists $dist_id{ $src->{distribution} } ) {
+            my $dist
+                = $dist_rs->find_or_create( { zname => $src->{distribution} },
+                { rows => 1 } );
+
+            if ( $dist->id ) {
+                $dist_id{ $src->{distribution} } = $dist->id;
+            }
+            else {
+                $dist_id{ $src->{distribution} } = $dist_rs->update(
+                    {   zauthor       => $src->{author},
+                        zrelease_date => $src->{date},
+                        zname         => $src->{distribution},
+                        zversion      => $src->{version_numified},
+                        zabstract     => $src->{abstract}
+                    }
+                )->id;
+            }
+        }
+
+        my $insert = {
+            z_ent         => $ent->z_ent,
+            z_opt         => 1,
+            zabstract     => $src->{'abstract.analyzed'},
+            zdistribution => $dist_id{ $src->{distribution} },
+            zname         => $src->{documentation},
+            zpath         => $src->{path},
+        };
+        push @rows, $insert;
+
+        if ( scalar @rows >= 1000 ) {
+            $rs->populate( \@rows );
             @rows = ();
-            $pm->start and next;    # fork
-            $self->module_hits( \@todo, $ent, $rs );
-            $pm->finish;
+            say "rows in db: " . $rs->search( {} )->count;
         }
 
     }
 
-    $pm->wait_all_children;
-
-    if ( scalar @rows > 0 ) {
-        $self->module_hits( \@rows, $ent, $rs );
-    }
+    $rs->populate( \@rows ) if @rows;
 
     $self->update_ent( $rs, $ent );
 
@@ -259,74 +288,72 @@ sub update_ent {
 
 }
 
-sub module_hits {
+sub update_module_pod {
 
-    my $self = shift;
-    my $hits = shift;
-    my $ent  = shift;
-    my $rs   = shift;
-
-    my @rows = ();
-
-    foreach my $result ( @{$hits} ) {
-
-        my $src = $self->extract_hit( $result );
-        next if !$src;
-
-        #say dump $src;
-        say sprintf( "%s: %s (%s)",
-            $src->{distribution}, $src->{documentation}, $src->{date} );
-
+    my $self   = shift;
+    my $rs     = $self->schema->resultset( 'Zmodule' );
+    my $mod_rs = $rs->search( { zpod => undef },
+        { join => { Distribution => 'Author' } } );
+    while ( my $mod = $mod_rs->next ) {
         my $pod_url = $self->pod_server
-            . join( "/", $src->{author}, $src->{release}, $src->{path} );
-
-        say "GETting: $pod_url";
+            . join( "/",
+            $mod->Distribution->Author->zpauseid,
+            $mod->Distribution->zrelease_name,
+            $mod->zpath );
+        say $pod_url;
 
         my $pod
             = $self->mech->get( $pod_url )->is_success
             ? $self->mech->content
             : undef;
-
-        if ( !$pod ) {
-            say "no pod found.  skipping!!!";
-            next;
-        }
-
-        # TODO why are there multiple dists with the same name in this table. 
-        my $dist = $self->schema->resultset( 'Zdistribution' )
-            ->search( { zname => $src->{distribution} } )->first;
-
-        # doing a find_or_create for each row would be too many extra selects
-        if ( !$dist ) {
-            $dist = $self->schema->resultset( 'Zdistribution' )->create(
-                {   zauthor       => $src->{author},
-                    zrelease_date => $src->{date},
-                    zname         => $src->{distribution},
-                    zversion      => $src->{version_numified},
-                    zabstract     => $src->{abstract}
-                }
-            );
-        }
-
-        my $insert = {
-            z_ent         => $ent->z_ent,
-            z_opt         => 1,
-            zabstract     => $src->{'abstract.analyzed'},
-            zdistribution => $dist->z_pk,
-            zname         => $src->{documentation},
-            zpod          => $pod,
-        };
-        push @rows, $insert;
-
+        $mod->update({ zpod => $pod }) if $pod;
     }
 
-    $rs->populate( \@rows ) if @rows;
-    say "inserted " . @rows . " modules";
-    say "total inserts: " . $rs->search( {} )->count;
-
-    return;
-
 }
+
+#sub module_hits {
+#
+#    my $self = shift;
+#    my $hits = shift;
+#    my $ent  = shift;
+#    my $rs   = shift;
+#
+#    my @rows = ();
+#
+#    foreach my $result ( @{$hits} ) {
+#
+#
+#
+#        #say dump $src;
+#        say sprintf( "%s: %s (%s)",
+#            $src->{distribution}, $src->{documentation}, $src->{date} );
+#
+#        my $pod_url = $self->pod_server
+#            . join( "/", $src->{author}, $src->{release}, $src->{path} );
+#
+#        say "GETting: $pod_url";
+#
+#        my $pod
+#            = $self->mech->get( $pod_url )->is_success
+#            ? $self->mech->content
+#            : undef;
+#
+#        if ( !$pod ) {
+#            say "no pod found.  skipping!!!";
+#            next;
+#        }
+#
+#
+#
+#    }
+#
+#    $rs->populate( \@rows ) if @rows;
+#    say "inserted " . @rows . " modules";
+#    say "total inserts: " . $rs->search( {} )->count;
+#
+#    return;
+#
+#}
 
 sub module_scroller {
 
@@ -410,5 +437,11 @@ sub init_rs {
 =head2 init_rs( $dbic_table_name )
 
 Truncates table if required.  Returns a resultset for the table.
+
+=head2 insert_modules
+
+Do bulk inserts of all modules returned by the API. Fetch Pod later.
+This allows us to cut down on expensive API calls as well as avoiding
+a constantly changing list of modules.
 
 =cut

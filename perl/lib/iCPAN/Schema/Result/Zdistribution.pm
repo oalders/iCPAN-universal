@@ -88,6 +88,11 @@ __PACKAGE__->set_primary_key("z_pk");
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration
 
+__PACKAGE__->add_columns(
+  "zrelease_name",
+  { data_type => "varchar", is_nullable => 1 },
+);
+
 __PACKAGE__->belongs_to(
     Author => 'iCPAN::Schema::Result::Zauthor',
     { 'foreign.z_pk' => 'self.zauthor' }
