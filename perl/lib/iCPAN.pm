@@ -3,9 +3,11 @@ package iCPAN;
 use CHI;
 use Data::Dump qw( dump );
 use ElasticSearch;
+use MetaCPAN::Pod;
 use Modern::Perl;
 use Moose;
 use Parallel::ForkManager;
+use Try::Tiny;
 use WWW::Mechanize;
 use WWW::Mechanize::Cached;
 
@@ -19,8 +21,7 @@ use iCPAN::Schema;
 has 'es'       => ( is => 'rw', isa => 'ElasticSearch', lazy_build => 1 );
 has 'children' => ( is => 'rw', isa => 'Int',           default    => 2 );
 has 'index' => ( is => 'rw', default => 'v0' );
-has 'mech' =>
-    ( is => 'rw', isa => 'WWW::Mechanize::Cached', lazy_build => 1 );
+has 'mech' => ( is => 'rw', isa => 'WWW::Mechanize', lazy_build => 1 );
 has 'pod_server' =>
     ( is => 'rw', default => 'http://localhost:5000/podpath/' );
 has 'search_prefix' => ( is => 'rw', isa => 'Str', default => 'DBIx::Class' );
@@ -59,9 +60,9 @@ sub _build_mech {
         cache_size => '800m'
     );
 
-    my $mech = WWW::Mechanize::Cached->new( autocheck => 0, cache => $cache );
+   #my $mech = WWW::Mechanize::Cached->new( autocheck => 0, cache => $cache );
 
-    #my $mech = WWW::Mechanize->new( autocheck => 0 );
+    my $mech = WWW::Mechanize->new( autocheck => 0 );
     return $mech;
 
 }
@@ -294,21 +295,54 @@ sub update_module_pod {
     my $rs     = $self->schema->resultset( 'Zmodule' );
     my $mod_rs = $rs->search( { zpod => undef },
         { join => { Distribution => 'Author' } } );
-    while ( my $mod = $mod_rs->next ) {
-        my $pod_url = $self->pod_server
-            . join( "/",
-            $mod->Distribution->Author->zpauseid,
-            $mod->Distribution->zrelease_name,
-            $mod->zpath );
-        say $pod_url;
+    my $converter = MetaCPAN::Pod->new;
 
-        my $pod
-            = $self->mech->get( $pod_url )->is_success
-            ? $self->mech->content
-            : undef;
-        $mod->update({ zpod => $pod }) if $pod;
+    my $dist_rs
+        = $self->schema->resultset( 'Zdistribution' )
+        ->search( { 'Modules.zpod' => undef },
+        { join => [ 'Modules', 'Author' ] } );
+
+    #say dump $icpan->schema;
+
+    while ( my $dist = $dist_rs->next ) {
+
+        my $mod_rs = $dist->Modules( { zpod => undef } );
+        $converter->build_tar( $dist->Author->zpauseid, $dist->zrelease_name );
+        say "starting: " . $dist->zrelease_name;
+
+        while ( my $mod = $mod_rs->next ) {
+            say "starting: " . $mod->zpath;
+
+            my $pod = undef;
+            try {
+                $pod = $converter->pod_from_tar( $dist->zrelease_name,
+                    $mod->zpath );
+            }
+            catch {
+                warn "caught error: $_";    # not $@
+            };
+
+            if ( $pod ) {
+                my $xhtml;
+                try { $xhtml = $converter->parse_pod( $pod ) };
+                if ( $xhtml ) {
+                    $mod->update( { zpod => $xhtml } );
+                    next;
+                }       
+            }
+
+            my $pod_url = $self->pod_server
+                . join( "/",
+                $dist->Author->zpauseid, $dist->zrelease_name,
+                $mod->zpath );
+            say $pod_url;
+            
+            if ( $self->mech->get( $pod_url )->is_success ) {
+                $mod->update({ zpod => $self->mech->content })
+            }
+
+        }
     }
-
 }
 
 #sub module_hits {

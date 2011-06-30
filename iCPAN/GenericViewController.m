@@ -65,6 +65,7 @@
     [fetchRequest setSortDescriptors:[NSArray arrayWithObject:sort]];
     
     [fetchRequest setFetchBatchSize:10];
+    [fetchRequest setFetchLimit:100];
     
     fetchedResultsController = 
     [[NSFetchedResultsController alloc] initWithFetchRequest:fetchRequest 
